@@ -1,0 +1,90 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    chart: heapster-0.1.1
+  name: heapster-heapster
+  namespace: kube-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: heapster-heapster
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: heapster-heapster
+    spec:
+      containers:
+      - command:
+        - /heapster
+        - --source=kubernetes.summary_api:''
+        - --sink=influxdb:http://heapster-store-influxdb.monitoring:8086
+        image: gcr.io/google_containers/heapster:v1.3.0
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /healthz
+            port: 8082
+            scheme: HTTP
+          initialDelaySeconds: 180
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 5
+        name: heapster
+        ports:
+        - containerPort: 8082
+          protocol: TCP
+        resources:
+          limits:
+            cpu: 280m
+            memory: 278Mi
+          requests:
+            cpu: 280m
+            memory: 278Mi
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      - command:
+        - /pod_nanny
+        - --deployment=heapster-heapster
+        - --container=heapster
+        - --cpu=150m
+        - --extra-cpu=10m
+        - --memory=200Mi
+        - --extra-memory=6Mi
+        - --threshold=5
+        - --poll-period=300000
+        env:
+        - name: MY_POD_NAME
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.name
+        - name: MY_POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
+        image: gcr.io/google_containers/addon-resizer:1.7
+        imagePullPolicy: IfNotPresent
+        name: heapster-nanny
+        resources:
+          limits:
+            cpu: 50m
+            memory: 90Mi
+          requests:
+            cpu: 50m
+            memory: 90Mi
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      terminationGracePeriodSeconds: 30

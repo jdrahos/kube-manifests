@@ -1,0 +1,112 @@
+---
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  labels:
+    app: rook-ceph-osd
+    rook_cluster: rook
+  name: rook-ceph-osd
+  namespace: rook
+spec:
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: rook-ceph-osd
+      rook_cluster: rook
+  template:
+    metadata:
+      labels:
+        app: rook-ceph-osd
+        rook_cluster: rook
+      name: rook-ceph-osd
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: storage
+                operator: In
+                values:
+                - "true"
+      containers:
+      - args:
+        - osd
+        env:
+        - name: ROOK_NODE_NAME
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: spec.nodeName
+        - name: ROOK_PRIVATE_IPV4
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: status.podIP
+        - name: ROOK_PUBLIC_IPV4
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: status.podIP
+        - name: ROOK_CLUSTER_NAME
+          value: rook
+        - name: ROOK_MON_ENDPOINTS
+          valueFrom:
+            configMapKeyRef:
+              key: data
+              name: rook-ceph-mon-endpoints
+        - name: ROOK_MON_SECRET
+          valueFrom:
+            secretKeyRef:
+              key: mon-secret
+              name: rook-ceph-mon
+        - name: ROOK_ADMIN_SECRET
+          valueFrom:
+            secretKeyRef:
+              key: admin-secret
+              name: rook-ceph-mon
+        - name: ROOK_CONFIG_DIR
+          value: /var/lib/rook
+        - name: ROOK_CEPH_CONFIG_OVERRIDE
+          value: /etc/rook/config/override.conf
+        - name: ROOK_OSD_STORE
+          value: bluestore
+        - name: ROOK_OSD_DATABASE_SIZE
+          value: "1024"
+        - name: ROOK_OSD_JOURNAL_SIZE
+          value: "1024"
+        image: rook/rook:v0.6.0
+        imagePullPolicy: IfNotPresent
+        name: rook-ceph-osd
+        securityContext:
+          privileged: false
+          readOnlyRootFilesystem: false
+          runAsNonRoot: false
+          runAsUser: 0
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /var/lib/rook
+          name: rook-data
+        - mountPath: /etc/rook/config
+          name: rook-config-override
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      serviceAccount: rook-ceph-osd
+      serviceAccountName: rook-ceph-osd
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - hostPath:
+          path: /var/lib/rook
+        name: rook-data
+      - configMap:
+          defaultMode: 420
+          items:
+          - key: config
+            path: override.conf
+          name: rook-config-override
+        name: rook-config-override
+  templateGeneration: 1
+  updateStrategy:
+    type: OnDelete

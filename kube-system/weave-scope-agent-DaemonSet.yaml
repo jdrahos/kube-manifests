@@ -1,0 +1,75 @@
+---
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  labels:
+    app: weave-scope
+    name: weave-scope-agent
+    weave-cloud-component: scope
+    weave-scope-component: agent
+  name: weave-scope-agent
+  namespace: kube-system
+spec:
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: weave-scope
+      name: weave-scope-agent
+      weave-cloud-component: scope
+      weave-scope-component: agent
+  template:
+    metadata:
+      labels:
+        app: weave-scope
+        name: weave-scope-agent
+        weave-cloud-component: scope
+        weave-scope-component: agent
+    spec:
+      containers:
+      - args:
+        - --no-app
+        - --probe.docker.bridge=docker0
+        - --probe.docker=true
+        - --probe.kubernetes=true
+        - --probe.no-controls=true
+        - weave-scope-app:80
+        image: weaveworks/scope:1.6.7
+        imagePullPolicy: IfNotPresent
+        name: agent
+        securityContext:
+          privileged: true
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /var/run/docker.sock
+          name: docker-socket
+        - mountPath: /var/run/scope/plugins
+          name: scope-plugins
+        - mountPath: /sys/kernel/debug
+          name: sys-kernel-debug
+      dnsPolicy: ClusterFirstWithHostNet
+      hostNetwork: true
+      hostPID: true
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      serviceAccount: weave-scope
+      serviceAccountName: weave-scope
+      terminationGracePeriodSeconds: 30
+      tolerations:
+      - effect: NoSchedule
+        operator: Exists
+      volumes:
+      - hostPath:
+          path: /var/run/docker.sock
+        name: docker-socket
+      - hostPath:
+          path: /var/run/scope/plugins
+        name: scope-plugins
+      - hostPath:
+          path: /sys/kernel/debug
+        name: sys-kernel-debug
+  templateGeneration: 3
+  updateStrategy:
+    rollingUpdate:
+      maxUnavailable: 1
+    type: RollingUpdate

@@ -1,0 +1,85 @@
+---
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  annotations:
+    a10.service_group: kube-traefik-{{.Type}}
+    traefik.frontend.entryPoints: http,https,ws,wss
+  labels:
+    app: traefik-ingress
+    kubernetes.io/cluster-service: "true"
+  name: traefik-ingress-controller-80
+  namespace: ingress
+spec:
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: traefik-ingress-controller
+  template:
+    metadata:
+      labels:
+        app: traefik-ingress-controller
+    spec:
+      containers:
+      - args:
+        - --configfile=/config/traefik.toml
+        image: traefik:v1.4.0-alpine
+        imagePullPolicy: Always
+        livenessProbe:
+          failureThreshold: 5
+          httpGet:
+            path: /health
+            port: 18080
+            scheme: HTTP
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 10
+        name: traefik-ingress-controller
+        ports:
+        - containerPort: 80
+          hostPort: 80
+          name: traefik-http
+          protocol: TCP
+        - containerPort: 18080
+          hostPort: 18080
+          name: traefik-ui
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 5
+          httpGet:
+            path: /health
+            port: 18080
+            scheme: HTTP
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 10
+        resources:
+          requests:
+            cpu: "1"
+            memory: 200Mi
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /config
+          name: config
+      dnsPolicy: ClusterFirst
+      hostNetwork: true
+      nodeSelector:
+        role: edge-router
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      serviceAccount: traefik-ingress-controller
+      serviceAccountName: traefik-ingress-controller
+      terminationGracePeriodSeconds: 60
+      volumes:
+      - configMap:
+          defaultMode: 420
+          name: traefik-ingress-controller-80
+        name: config
+  templateGeneration: 2
+  updateStrategy:
+    rollingUpdate:
+      maxUnavailable: 1
+    type: RollingUpdate

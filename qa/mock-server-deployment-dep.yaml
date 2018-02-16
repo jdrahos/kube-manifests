@@ -1,0 +1,94 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: mock-server-app
+  name: mock-server-deployment
+  namespace: qa
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app: mock-server-app
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: mock-server-app
+    spec:
+      containers:
+      - env:
+        - name: DC
+          valueFrom:
+            configMapKeyRef:
+              key: dc
+              name: cluster-configs
+        - name: CW_CONFIG_PREFIX
+          valueFrom:
+            configMapKeyRef:
+              key: configPrefix
+              name: cluster-configs
+        - name: JAVA_OPTIONS
+          valueFrom:
+            configMapKeyRef:
+              key: java.options
+              name: mock-server-configs
+        image: registry.pulsepoint.com/mock-server
+        imagePullPolicy: Always
+        livenessProbe:
+          failureThreshold: 30
+          httpGet:
+            path: /rest/mockedservice/
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 90
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 10
+        name: mock-server-app
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        - containerPort: 8086
+          name: jmx
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 30
+          httpGet:
+            path: /rest/mockedservice/
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 10
+        resources:
+          limits:
+            cpu: "1"
+            memory: 2Gi
+          requests:
+            cpu: "1"
+            memory: 2Gi
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /var/lib/jetty/start.ini
+          name: start-ini
+          subPath: start.ini.file
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - configMap:
+          defaultMode: 420
+          name: mock-server-configs
+        name: start-ini

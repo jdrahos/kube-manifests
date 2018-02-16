@@ -1,0 +1,46 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    name: flux
+  name: flux
+  namespace: cicd
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: flux
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        name: flux
+    spec:
+      containers:
+      - args:
+        - --git-url=git@github.com:jdrahos/kube-manifests.git
+        - --git-branch=lga-test
+        image: quay.io/weaveworks/flux:1.2.3
+        imagePullPolicy: IfNotPresent
+        name: flux
+        ports:
+        - containerPort: 3030
+          protocol: TCP
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /etc/fluxd/ssh
+          name: git-key
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      serviceAccount: flux
+      serviceAccountName: flux
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: git-key
+        secret:
+          defaultMode: 420
+          secretName: flux-git-deploy

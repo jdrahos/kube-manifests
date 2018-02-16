@@ -4,7 +4,7 @@ metadata:
   name: cluster-configs
   namespace: default
 data:
-  name: lga-test
+  name: lga-test-2
   dc: lga
   configPrefix: http://lga-configservice.contextweb.prod/ConfigServices_
   a10url: http://lga-lb01.pulse.prod

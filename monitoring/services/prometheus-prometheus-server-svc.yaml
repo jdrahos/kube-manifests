@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: prometheus
+    chart: prometheus-4.5.0
+    component: server
+    heritage: Tiller
+    release: prometheus
+  name: prometheus-prometheus-server
+  selfLink: /api/v1/namespaces/monitoring/services/prometheus-prometheus-server
+spec:
+  clusterIP: <unknown>
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 9090
+  selector:
+    app: prometheus
+    component: server
+    release: prometheus
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}

@@ -1,0 +1,20 @@
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  annotations:
+    rbac.authorization.kubernetes.io/autoupdate: "true"
+  creationTimestamp: 2017-12-21T20:44:23Z
+  labels:
+    kubernetes.io/bootstrapping: rbac-defaults
+  name: system:controller:resourcequota-controller
+  resourceVersion: "35066617"
+  selfLink: /apis/rbac.authorization.k8s.io/v1beta1/clusterrolebindings/system%3Acontroller%3Aresourcequota-controller
+  uid: b9e78038-e68f-11e7-98cd-005056a8c750
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: system:controller:resourcequota-controller
+subjects:
+- kind: ServiceAccount
+  name: resourcequota-controller
+  namespace: kube-system

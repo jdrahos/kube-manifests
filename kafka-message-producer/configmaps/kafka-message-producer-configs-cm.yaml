@@ -1,0 +1,65 @@
+apiVersion: v1
+data:
+  fluentd.options: |
+    <source>
+      @type tcp
+      tag java
+      format json
+      port 5170
+    </source>
+
+    <filter java>
+        @type record_transformer
+        enable_ruby
+        <record>
+            timesecond ${Float(record["timeMillis"]) / 1000}
+        </record>
+        remove_keys ["timeMillis"]
+        renew_time_key timesecond
+    </filter>
+    <filter **>
+        @type record_transformer
+        <record>
+            app "kmp"
+            kubPod "#{ENV['HOSTNAME']}"
+            kubNs "#{ENV['KUB_NAMESPACE']}"
+            kubNode "#{ENV['KUB_NODE']}"
+            clusterName "#{ENV['CLUSTER_NAME']}"
+            clusterEnv "#{ENV['CONFIG_ENV']}"
+            clusterDc "#{ENV['CONFIG_DC']}"
+        </record>
+    </filter>
+
+    <match **>
+        @type elasticsearch
+        logstash_format true
+        logstash_prefix logstash-kmp
+        time_precision 3
+        host elasticsearch.logging.svc.cluster.local #(optional; default="localhost")
+        port 9200 #(optional; default=9200)
+        #index_name <index name> #(optional; default=fluentd)
+        #type_name <type name> #(optional; default=fluentd)
+
+
+        <buffer>
+          @type memory
+          flush_interval 1s
+          retry_forever false
+          chunk_limit_size 8m
+          queue_limit_length 64
+          overflow_action drop_oldest_chunk
+          retry_wait 10
+        </buffer>
+
+    </match>
+  java.options: |
+    -Xmx128m
+    -Denv.CW_CONFIG_LOCAL_CACHE=/opt/cwdata/config
+    -DlogDirectoryPath=/var/log/pulsepoint/wide
+    -Denv.CW_CONFIG_PREFIX=http://lga-configservice.contextweb.prod/ConfigServices_Prod
+    -Dorg.apache.logging.log4j.simplelog.StatusLogger.level=TRACE
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: kafka-message-producer-configs
+  selfLink: /api/v1/namespaces/kafka-message-producer/configmaps/kafka-message-producer-configs

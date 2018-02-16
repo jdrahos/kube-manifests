@@ -1,0 +1,176 @@
+apiVersion: v1
+data:
+  java.options: |-
+    -server
+    -XX:+UnlockDiagnosticVMOptions
+    -XX:+LogVMOutput
+    -XX:LogFile=../logs/jvm.log
+    -XX:+PrintGCDetails
+    -XX:+PrintGCTimeStamps
+    -Xloggc:../logs/gc.log
+    -Dsun.rmi.dgc.server.gcInterval=86400000
+    -Dsun.rmi.dgc.client.gcInterval=86400000
+    -Dprofiling.proxy=disabled
+
+    -XX:+UseG1GC
+    -XX:MaxGCPauseMillis=60
+    -XX:ParallelGCThreads=24
+    -XX:ConcGCThreads=24
+
+    -Xms2g
+    -Xmx2g
+    -Xss256k
+
+    -DLog4jContextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector
+    -DAsyncLogger.RingBufferSize=1024
+    -DAsyncLogger.ThreadNameStrategy=UNCACHED
+
+    -Djetty.jmxrmihost=localhost
+    -Djetty.jmxrmiport=8686
+  start.ini.file: |-
+    #===========================================================
+    # Jetty start.jar arguments
+    #
+    # The contents of this file, together with the *.ini
+    # files found in start.d directory are used to build
+    # the classpath and command line on a call to
+    #    java -jar start.jar [arg...]
+    #
+    # Use the following command to see more options
+    #    java -jar start.jar --help
+    #
+    # Each line in these files is prepended to the command line
+    # as arguments and may be either:
+    #  + A property like: name=value
+    #  + A module to enable like: --module=jmx
+    #  + An XML configuration file like: etc/jetty-feature.xml
+    #  + A start.jar option like: --dry-run
+    #
+    # If --exec or --dry-run are used, then this file may also
+    # contain lines with:
+    #  + A JVM option like: -Xmx2000m
+    #  + A System Property like: -Dcom.sun.management.jmxremote
+    #
+    # The --add-to-start=module option can be used to append
+    # a configuration template for a module to start.ini
+    # The --add-to-startd=module option can be used to create
+    # a configuration template for a module in start.d/module.ini
+    # For example configure and run with SPDY use
+    #
+    #   java -jar start.jar --add-to-startd=spdy
+    #   $EDITOR start.d/spdy.ini
+    #   java -jar start.jar
+    #
+    #===========================================================
+
+
+    #
+    # Initialize module server
+    #
+    --module=server
+    ##
+    ## Server Threading Configuration
+    ##
+    # minimum number of threads
+    threads.min=48
+    # maximum number of threads
+    threads.max=400
+    # thread idle timeout in milliseconds
+    threads.timeout=300
+    # buffer size for output
+    jetty.output.buffer.size=32768
+    # request header buffer size
+    jetty.request.header.size=16384
+    # response header buffer size
+    jetty.response.header.size=16384
+    # should jetty send the server version header?
+    jetty.send.server.version=true
+    # should jetty send the date header?
+    jetty.send.date.header=false
+    # What host to listen on (leave commented to listen on all interfaces)
+    #jetty.host=myhost.com
+    # Dump the state of the Jetty server, components, and webapps after startup
+    jetty.dump.start=false
+    # Dump the state of the Jetty server, before stop
+    jetty.dump.stop=false
+
+
+
+    #
+    # Initialize module deploy
+    #
+    --module=deploy
+    ## DeployManager configuration
+    # Monitored Directory name (relative to jetty.base)
+    # jetty.deploy.monitoredDirName=webapps
+
+
+    #
+    # Initialize module websocket
+    #
+    --module=websocket
+
+    #
+    # Initialize module ext
+    #
+    --module=ext
+
+    #
+    # Initialize module resources
+    #
+    --module=resources
+
+    #
+    # Enable JMX
+    #
+    --module=jmx-remote
+
+    #
+    # Initialize module http
+    #
+    --module=http
+    ### HTTP Connector Configuration
+
+    ## HTTP port to listen on
+    jetty.port=8080
+
+    ## HTTP idle timeout in milliseconds
+    http.timeout=30000
+
+    ## HTTP Socket.soLingerTime in seconds. (-1 to disable)
+    # http.soLingerTime=-1
+
+    ## Parameters to control the number and priority of acceptors and selectors
+    # http.selectors=1
+    # http.acceptors=1
+    # http.selectorPriorityDelta=0
+    # http.acceptorPriorityDelta=0
+    #
+    # Initialize module jsp
+    #
+    --module=jsp
+    # JSP Configuration
+
+    # Select JSP implementation, choices are
+    #   glassfish : The reference implementation
+    #               default in jetty <= 9.1
+    #   apache    : The apache version
+    #               default jetty >= 9.2
+    jsp-impl=apache
+
+    # To use a non-jdk compiler for JSP compilation when using glassfish uncomment next line
+    # -Dorg.apache.jasper.compiler.disablejsr199=true
+    #
+    # Initialize module jstl
+    #
+    --module=jstl
+    # JSTL Configuration
+    # The glassfish jsp-impl includes JSTL by default and this module
+    # is not required to activate it.
+    # The apache jsp-impl does not include JSTL by default and this module
+    # is required to put JSTL on the container classpath
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: test-runner-configs
+  selfLink: /api/v1/namespaces/qa/configmaps/test-runner-configs

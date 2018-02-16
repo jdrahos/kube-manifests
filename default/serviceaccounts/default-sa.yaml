@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  creationTimestamp: null
+  name: default
+  selfLink: /api/v1/namespaces/default/serviceaccounts/default
+secrets:
+- name: default-token-nctb6

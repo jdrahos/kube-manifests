@@ -1,0 +1,32 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"extensions/v1beta1","kind":"Ingress","metadata":{"annotations":{"kubernetes.io/ingress.class":"nginx"},"name":"jenkins-ingress-nginx","namespace":"build"},"spec":{"backend":{"serviceName":"default-http-backend","servicePort":80},"rules":[{"host":"lga-kube-jenkins","http":{"paths":[{"backend":{"serviceName":"jenkins-jenkins","servicePort":8080},"path":"/"}]}},{"host":"lga-kube-jenkins.pulsepoint.com","http":{"paths":[{"backend":{"serviceName":"jenkins-jenkins","servicePort":8080},"path":"/"}]}}]}}
+    kubernetes.io/ingress.class: nginx
+  creationTimestamp: null
+  generation: 1
+  name: jenkins-ingress-nginx
+  selfLink: /apis/extensions/v1beta1/namespaces/build/ingresses/jenkins-ingress-nginx
+spec:
+  backend:
+    serviceName: default-http-backend
+    servicePort: 80
+  rules:
+  - host: lga-kube-jenkins
+    http:
+      paths:
+      - backend:
+          serviceName: jenkins-jenkins
+          servicePort: 8080
+        path: /
+  - host: lga-kube-jenkins.pulsepoint.com
+    http:
+      paths:
+      - backend:
+          serviceName: jenkins-jenkins
+          servicePort: 8080
+        path: /
+status:
+  loadBalancer: {}

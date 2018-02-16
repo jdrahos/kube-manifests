@@ -1,0 +1,20 @@
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: RoleBinding
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"rbac.authorization.k8s.io/v1beta1","kind":"RoleBinding","metadata":{"annotations":{},"name":"a10-bridge-role-binding","namespace":"ingress"},"roleRef":{"apiGroup":"rbac.authorization.k8s.io","kind":"Role","name":"a10-bridge-role"},"subjects":[{"kind":"ServiceAccount","name":"a10-bridge","namespace":"ingress"}]}
+  creationTimestamp: 2018-02-06T02:10:03Z
+  name: a10-bridge-role-binding
+  namespace: ingress
+  resourceVersion: "53154906"
+  selfLink: /apis/rbac.authorization.k8s.io/v1beta1/namespaces/ingress/rolebindings/a10-bridge-role-binding
+  uid: d7a6c87d-0ae2-11e8-8c1a-005056a811cf
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: a10-bridge-role
+subjects:
+- kind: ServiceAccount
+  name: a10-bridge
+  namespace: ingress

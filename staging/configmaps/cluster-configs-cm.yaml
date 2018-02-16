@@ -1,0 +1,12 @@
+apiVersion: v1
+data:
+  a10api: "2"
+  a10url: http://lga-lb01.pulse.prod
+  configPrefix: http://lga-configservice.contextweb.prod/ConfigServices_
+  dc: lga
+  name: lga-test
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: cluster-configs
+  selfLink: /api/v1/namespaces/staging/configmaps/cluster-configs

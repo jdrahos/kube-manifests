@@ -1,0 +1,48 @@
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRole
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"rbac.authorization.k8s.io/v1beta1","kind":"ClusterRole","metadata":{"annotations":{},"labels":{"name":"weave-scope"},"name":"weave-scope","namespace":""},"rules":[{"apiGroups":[""],"resources":["pods","replicationcontrollers","services","nodes"],"verbs":["list","watch"]},{"apiGroups":["apps"],"resources":["statefulsets"],"verbs":["list","watch"]},{"apiGroups":["batch"],"resources":["cronjobs","jobs"],"verbs":["list","watch"]},{"apiGroups":["extensions"],"resources":["daemonsets","deployments","replicasets"],"verbs":["list","watch"]}]}
+  creationTimestamp: 2018-01-10T03:23:58Z
+  labels:
+    name: weave-scope
+  name: weave-scope
+  resourceVersion: "54211329"
+  selfLink: /apis/rbac.authorization.k8s.io/v1beta1/clusterroles/weave-scope
+  uid: b2605a14-f5b5-11e7-bc2e-005056a8c8f3
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  - replicationcontrollers
+  - services
+  - nodes
+  verbs:
+  - list
+  - watch
+- apiGroups:
+  - apps
+  resources:
+  - statefulsets
+  verbs:
+  - list
+  - watch
+- apiGroups:
+  - batch
+  resources:
+  - cronjobs
+  - jobs
+  verbs:
+  - list
+  - watch
+- apiGroups:
+  - extensions
+  resources:
+  - daemonsets
+  - deployments
+  - replicasets
+  verbs:
+  - list
+  - watch

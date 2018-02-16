@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    name: test-runner-service
+  name: test-runner-service
+  selfLink: /api/v1/namespaces/qa/services/test-runner-service
+spec:
+  clusterIP: <unknown>
+  ports:
+  - name: http
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  - name: jmx
+    port: 8686
+    protocol: TCP
+    targetPort: 8686
+  selector:
+    app: test-runner-app
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}

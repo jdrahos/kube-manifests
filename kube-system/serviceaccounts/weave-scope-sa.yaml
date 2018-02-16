@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  annotations:
+    cloud.weave.works/launcher-info: |-
+      {
+        "server-version": "master-938237c",
+        "original-request": {
+          "url": "/k8s/v1.7/scope.yaml?k8s-version=Q2xpZW50IFZlcnNpb246IHZlcnNpb24uSW5mb3tNYWpvcjoiMSIsIE1pbm9yOiI3IiwgR2l0VmVyc2lvbjoidjEuNy40IiwgR2l0Q29tbWl0OiI3OTM2NThmMmQ3Y2E3ZjA2NGQyYmRmNjA2NTE5ZjlmZTEyMjljMzgxIiwgR2l0VHJlZVN0YXRlOiJjbGVhbiIsIEJ1aWxkRGF0ZToiMjAxNy0wOC0xN1QwODo0ODoyM1oiLCBHb1ZlcnNpb246ImdvMS44LjMiLCBDb21waWxlcjoiZ2MiLCBQbGF0Zm9ybToibGludXgvYW1kNjQifQpTZXJ2ZXIgVmVyc2lvbjogdmVyc2lvbi5JbmZve01ham9yOiIxIiwgTWlub3I6IjciLCBHaXRWZXJzaW9uOiJ2MS43LjExIiwgR2l0Q29tbWl0OiJiMTNmMmZkNjgyZDU2ZWFiN2E2YTJiNWExY2FiMWEzZDJjOGJkZDU1IiwgR2l0VHJlZVN0YXRlOiJjbGVhbiIsIEJ1aWxkRGF0ZToiMjAxNy0xMS0yNVQxNzo1MTozOVoiLCBHb1ZlcnNpb246ImdvMS44LjMiLCBDb21waWxlcjoiZ2MiLCBQbGF0Zm9ybToibGludXgvYW1kNjQifQo=",
+          "date": "Wed Jan 10 2018 03:23:58 GMT+0000 (UTC)"
+        },
+        "email-address": "support@weave.works"
+      }
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"v1","kind":"ServiceAccount","metadata":{"annotations":{"cloud.weave.works/launcher-info":"{\n  \"server-version\": \"master-938237c\",\n  \"original-request\": {\n    \"url\": \"/k8s/v1.7/scope.yaml?k8s-version=Q2xpZW50IFZlcnNpb246IHZlcnNpb24uSW5mb3tNYWpvcjoiMSIsIE1pbm9yOiI3IiwgR2l0VmVyc2lvbjoidjEuNy40IiwgR2l0Q29tbWl0OiI3OTM2NThmMmQ3Y2E3ZjA2NGQyYmRmNjA2NTE5ZjlmZTEyMjljMzgxIiwgR2l0VHJlZVN0YXRlOiJjbGVhbiIsIEJ1aWxkRGF0ZToiMjAxNy0wOC0xN1QwODo0ODoyM1oiLCBHb1ZlcnNpb246ImdvMS44LjMiLCBDb21waWxlcjoiZ2MiLCBQbGF0Zm9ybToibGludXgvYW1kNjQifQpTZXJ2ZXIgVmVyc2lvbjogdmVyc2lvbi5JbmZve01ham9yOiIxIiwgTWlub3I6IjciLCBHaXRWZXJzaW9uOiJ2MS43LjExIiwgR2l0Q29tbWl0OiJiMTNmMmZkNjgyZDU2ZWFiN2E2YTJiNWExY2FiMWEzZDJjOGJkZDU1IiwgR2l0VHJlZVN0YXRlOiJjbGVhbiIsIEJ1aWxkRGF0ZToiMjAxNy0xMS0yNVQxNzo1MTozOVoiLCBHb1ZlcnNpb246ImdvMS44LjMiLCBDb21waWxlcjoiZ2MiLCBQbGF0Zm9ybToibGludXgvYW1kNjQifQo=\",\n    \"date\": \"Wed Jan 10 2018 03:23:58 GMT+0000 (UTC)\"\n  },\n  \"email-address\": \"support@weave.works\"\n}"},"labels":{"name":"weave-scope"},"name":"weave-scope","namespace":"kube-system"}}
+  creationTimestamp: null
+  labels:
+    name: weave-scope
+  name: weave-scope
+  selfLink: /api/v1/namespaces/kube-system/serviceaccounts/weave-scope
+secrets:
+- name: weave-scope-token-ptfn8

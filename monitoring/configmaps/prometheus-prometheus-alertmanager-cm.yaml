@@ -1,0 +1,15 @@
+apiVersion: v1
+data:
+  alertmanager.yml: "global:\n  smtp_from: prometheus@pulsepoint.com\n  smtp_smarthost:
+    mail.pulse.prod:25\nroute:\n  receiver: 'default-receiver'\n  group_by: \n    -
+    alertname\n  group_wait: '30s'\n  group_interval: '5m'\n  repeat_interval: '24h'\n
+    \ routes:\n  - receiver: 'jdrahos'\n    match:\n      name: bh-service\nreceivers:\n
+    \ - name: 'default-receiver'\n    email_configs:\n      - to: 'jdrahos@pulsepoint.com'\n
+    \       require_tls: false\n        send_resolved: true\n  - name: 'jdrahos'\n
+    \   email_configs:\n      - to: 'jdrahos@pulsepoint.com'\n        require_tls:
+    false\n        send_resolved: true"
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: prometheus-prometheus-alertmanager
+  selfLink: /api/v1/namespaces/monitoring/configmaps/prometheus-prometheus-alertmanager

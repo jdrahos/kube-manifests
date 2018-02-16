@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    run: kubernator
+  name: kubernator
+  selfLink: /api/v1/namespaces/kubernator/services/kubernator
+spec:
+  clusterIP: <unknown>
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    run: kubernator
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}

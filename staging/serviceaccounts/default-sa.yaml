@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  creationTimestamp: null
+  name: default
+  selfLink: /api/v1/namespaces/staging/serviceaccounts/default
+secrets:
+- name: default-token-3p53s

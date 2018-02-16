@@ -1,0 +1,25 @@
+apiVersion: v1
+data:
+  bluefs: |
+    1
+  ceph_fsid: |
+    368dbe0d-333c-4287-bc58-f25a49e8d053
+  fsid: |
+    9df453b2-423a-479e-9022-8b2bc19a609d
+  kv_backend: |
+    rocksdb
+  magic: |
+    ceph osd volume v026
+  mkfs_done: |
+    yes
+  ready: |
+    ready
+  type: |
+    bluestore
+  whoami: |
+    0
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: rook-ceph-osd-0-fs-backup
+  selfLink: /api/v1/namespaces/rook/configmaps/rook-ceph-osd-0-fs-backup

@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  creationTimestamp: null
+  name: flannel
+  selfLink: /api/v1/namespaces/kube-system/serviceaccounts/flannel
+secrets:
+- name: flannel-token-4zpd8

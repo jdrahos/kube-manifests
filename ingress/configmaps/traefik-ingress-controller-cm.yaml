@@ -1,0 +1,12 @@
+apiVersion: v1
+data:
+  traefik.toml: "# traefik.toml\nlogLevel = \"INFO\"\ndefaultEntryPoints = [\"http\"]\n[entryPoints]\n
+    \ [entryPoints.http]\n  address = \":81\"\n  compress = true\n[web]\n  address
+    = \":18081\"      \n[kubernetes]\n"
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  labels:
+    app: traefik-ingress
+  name: traefik-ingress-controller
+  selfLink: /api/v1/namespaces/ingress/configmaps/traefik-ingress-controller

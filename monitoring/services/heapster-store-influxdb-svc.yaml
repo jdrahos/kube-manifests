@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: heapster-store-influxdb
+    chart: influxdb-0.4.2
+    heritage: Tiller
+    release: heapster-store
+  name: heapster-store-influxdb
+  selfLink: /api/v1/namespaces/monitoring/services/heapster-store-influxdb
+spec:
+  clusterIP: <unknown>
+  ports:
+  - name: api
+    port: 8086
+    protocol: TCP
+    targetPort: 8086
+  selector:
+    app: heapster-store-influxdb
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}

@@ -1,0 +1,19 @@
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"rbac.authorization.k8s.io/v1beta1","kind":"ClusterRoleBinding","metadata":{"annotations":{},"name":"rook-operator","namespace":""},"roleRef":{"apiGroup":"rbac.authorization.k8s.io","kind":"ClusterRole","name":"rook-operator"},"subjects":[{"kind":"ServiceAccount","name":"rook-operator","namespace":"rook"}]}
+  creationTimestamp: 2018-01-03T00:00:48Z
+  name: rook-operator
+  resourceVersion: "43564602"
+  selfLink: /apis/rbac.authorization.k8s.io/v1beta1/clusterrolebindings/rook-operator
+  uid: 272bb572-f019-11e7-926b-005056a8c8f3
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: rook-operator
+subjects:
+- kind: ServiceAccount
+  name: rook-operator
+  namespace: rook

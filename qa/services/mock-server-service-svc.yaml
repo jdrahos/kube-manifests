@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    name: mock-server-service
+  name: mock-server-service
+  selfLink: /api/v1/namespaces/qa/services/mock-server-service
+spec:
+  clusterIP: <unknown>
+  ports:
+  - name: http
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  - name: jmx
+    port: 8686
+    protocol: TCP
+    targetPort: 8686
+  selector:
+    app: mock-server-app
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}

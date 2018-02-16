@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  creationTimestamp: null
+  labels:
+    addonmanager.kubernetes.io/mode: Reconcile
+    kubernetes.io/cluster-service: "true"
+  name: kube-dns
+  selfLink: /api/v1/namespaces/kube-system/serviceaccounts/kube-dns
+secrets:
+- name: kube-dns-token-3j221

@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"labels":{"app":"weave-scope","name":"weave-scope-app","weave-cloud-component":"scope","weave-scope-component":"app"},"name":"weave-scope-app","namespace":"kube-system"},"spec":{"ports":[{"name":"app","port":80,"protocol":"TCP","targetPort":4040}],"selector":{"app":"weave-scope","name":"weave-scope-app","weave-cloud-component":"scope","weave-scope-component":"app"}}}
+  creationTimestamp: null
+  labels:
+    app: weave-scope
+    name: weave-scope-app
+    weave-cloud-component: scope
+    weave-scope-component: app
+  name: weave-scope-app
+  selfLink: /api/v1/namespaces/kube-system/services/weave-scope-app
+spec:
+  clusterIP: <unknown>
+  ports:
+  - name: app
+    port: 80
+    protocol: TCP
+    targetPort: 4040
+  selector:
+    app: weave-scope
+    name: weave-scope-app
+    weave-cloud-component: scope
+    weave-scope-component: app
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}

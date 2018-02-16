@@ -1,0 +1,24 @@
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRole
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"rbac.authorization.k8s.io/v1beta1","kind":"ClusterRole","metadata":{"annotations":{},"labels":{"name":"flux"},"name":"flux","namespace":""},"rules":[{"apiGroups":["*"],"resources":["*"],"verbs":["*"]},{"nonResourceURLs":["*"],"verbs":["*"]}]}
+  creationTimestamp: 2018-02-15T23:27:12Z
+  labels:
+    name: flux
+  name: flux
+  resourceVersion: "55770231"
+  selfLink: /apis/rbac.authorization.k8s.io/v1beta1/clusterroles/flux
+  uid: bfc4327a-12a7-11e8-93d5-005056a8c750
+rules:
+- apiGroups:
+  - '*'
+  resources:
+  - '*'
+  verbs:
+  - '*'
+- nonResourceURLs:
+  - '*'
+  verbs:
+  - '*'

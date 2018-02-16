@@ -1,0 +1,16 @@
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  creationTimestamp: 2018-01-23T16:24:58Z
+  name: traefik-ingress-controller
+  resourceVersion: "49015383"
+  selfLink: /apis/rbac.authorization.k8s.io/v1beta1/clusterrolebindings/traefik-ingress-controller
+  uid: f4829a96-0059-11e8-b499-005056a8c8f3
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: traefik-ingress-controller
+subjects:
+- kind: ServiceAccount
+  name: traefik-ingress-controller
+  namespace: ingress

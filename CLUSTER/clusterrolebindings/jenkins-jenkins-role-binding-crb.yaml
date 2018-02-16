@@ -1,0 +1,21 @@
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  creationTimestamp: 2018-01-22T16:55:38Z
+  labels:
+    app: jenkins-jenkins
+    chart: jenkins-0.13.0
+    heritage: Tiller
+    release: jenkins
+  name: jenkins-jenkins-role-binding
+  resourceVersion: "48747148"
+  selfLink: /apis/rbac.authorization.k8s.io/v1beta1/clusterrolebindings/jenkins-jenkins-role-binding
+  uid: 12a0dfe1-ff95-11e7-b499-005056a8c8f3
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+- kind: ServiceAccount
+  name: jenkins-jenkins
+  namespace: build

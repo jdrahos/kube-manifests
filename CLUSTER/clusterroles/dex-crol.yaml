@@ -1,0 +1,21 @@
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRole
+metadata:
+  creationTimestamp: 2017-12-22T20:20:09Z
+  name: dex
+  resourceVersion: "35270603"
+  selfLink: /apis/rbac.authorization.k8s.io/v1beta1/clusterroles/dex
+  uid: 81d06029-e755-11e7-98cd-005056a8c750
+rules:
+- apiGroups:
+  - dex.coreos.com
+  resources:
+  - '*'
+  verbs:
+  - '*'
+- apiGroups:
+  - apiextensions.k8s.io
+  resources:
+  - customresourcedefinitions
+  verbs:
+  - create

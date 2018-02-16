@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: jenkins-jenkins
+    chart: jenkins-0.13.0
+    component: jenkins-jenkins-master
+    heritage: Tiller
+    release: jenkins
+  name: jenkins-jenkins
+  selfLink: /api/v1/namespaces/build/services/jenkins-jenkins
+spec:
+  clusterIP: <unknown>
+  ports:
+  - name: http
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    component: jenkins-jenkins-master
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}

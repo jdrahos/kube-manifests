@@ -1,0 +1,21 @@
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"rbac.authorization.k8s.io/v1beta1","kind":"ClusterRoleBinding","metadata":{"annotations":{},"labels":{"name":"weave-scope"},"name":"weave-scope","namespace":""},"roleRef":{"apiGroup":"rbac.authorization.k8s.io","kind":"ClusterRole","name":"weave-scope"},"subjects":[{"kind":"ServiceAccount","name":"weave-scope","namespace":"kube-system"}]}
+  creationTimestamp: 2018-01-10T03:23:59Z
+  labels:
+    name: weave-scope
+  name: weave-scope
+  resourceVersion: "54211713"
+  selfLink: /apis/rbac.authorization.k8s.io/v1beta1/clusterrolebindings/weave-scope
+  uid: b275b964-f5b5-11e7-bc2e-005056a8c8f3
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: weave-scope
+subjects:
+- kind: ServiceAccount
+  name: weave-scope
+  namespace: kube-system

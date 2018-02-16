@@ -1,0 +1,20 @@
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  annotations:
+    rbac.authorization.kubernetes.io/autoupdate: "true"
+  creationTimestamp: 2017-12-21T20:44:22Z
+  labels:
+    kubernetes.io/bootstrapping: rbac-defaults
+  name: system:controller:node-controller
+  resourceVersion: "35066610"
+  selfLink: /apis/rbac.authorization.k8s.io/v1beta1/clusterrolebindings/system%3Acontroller%3Anode-controller
+  uid: b9c99197-e68f-11e7-98cd-005056a8c750
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: system:controller:node-controller
+subjects:
+- kind: ServiceAccount
+  name: node-controller
+  namespace: kube-system

@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    prometheus.io/probe: pushgateway
+  creationTimestamp: null
+  labels:
+    app: prometheus
+    chart: prometheus-4.5.0
+    component: pushgateway
+    heritage: Tiller
+    release: prometheus
+  name: prometheus-prometheus-pushgateway
+  selfLink: /api/v1/namespaces/monitoring/services/prometheus-prometheus-pushgateway
+spec:
+  clusterIP: <unknown>
+  ports:
+  - name: http
+    port: 9091
+    protocol: TCP
+    targetPort: 9091
+  selector:
+    app: prometheus
+    component: pushgateway
+    release: prometheus
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}

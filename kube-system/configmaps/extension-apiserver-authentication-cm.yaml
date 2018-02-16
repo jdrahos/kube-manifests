@@ -1,0 +1,26 @@
+apiVersion: v1
+data:
+  client-ca-file: |-
+    -----BEGIN CERTIFICATE-----
+    MIIC9zCCAd+gAwIBAgIJAMILelGrRk2FMA0GCSqGSIb3DQEBCwUAMBIxEDAOBgNV
+    BAMMB2t1YmUtY2EwHhcNMTcwODI4MDk0NDM0WhcNNDUwMTEzMDk0NDM0WjASMRAw
+    DgYDVQQDDAdrdWJlLWNhMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA
+    7J72yXEZTjQSC7gn8tIV37YDvEoZXaw+QvL2NJfzcIFOEwqFLQdrg6FmZlbjv76h
+    ogqeJQlywlKuNRLpVDudYoeRFIY83n07Ab3FXjtCw+FN6wf07VMORgw0pZ2IgK84
+    wrV71nV7DiWfMeyVzc1pGepFQ0Adcb0zbQO7pvssdbzm1M6YLTnIc5DTz3dT0UcH
+    8I2JM/28HWhhcm2Zk5eedrkT5ckFZDCR6+7Rkh3K0if/du/pDAWcHms+x4EbiNxO
+    6sc9uJVwXTIPrQYTrQjRwQYlDBfD2y27oKCgL9Ffg1p4+7XoKCOQnAbCQ93Qert8
+    +UPgSEGN+AginFD8Dj9jwQIDAQABo1AwTjAdBgNVHQ4EFgQUdUN7213Hv4283rM8
+    jzP/86gwAHIwHwYDVR0jBBgwFoAUdUN7213Hv4283rM8jzP/86gwAHIwDAYDVR0T
+    BAUwAwEB/zANBgkqhkiG9w0BAQsFAAOCAQEAphnj9/40D6ederWwZVXbiWAeiHe4
+    mN7yURraHXmsYT83FBBwIV4wj61qersPZIHOjMxYWCCmcSFjFx6hm4LUM7RkKrs9
+    mqRTfEXomeSp5lnNeWuE639UXrG76Qsn4GzmjysPNvhaOpkYq6+qzJcYLlPRSf36
+    n49Cn6Ky8V3kjMbBaLgVpq60qA1N7mkNJL3z9OHn87wMYbCBqrMjQBrp/ZAEZgYh
+    Zydq4MihmHZF/HRgcwRB5ixTulqKrfPxpNJc16l2+5bEhkCfq6QGIu1J62Nn25UA
+    fNC/irh8q43fZEHLnZW/l2Ad5lGEY2QTjez5pH6s8KV751b/5Qs0oKFQBA==
+    -----END CERTIFICATE-----
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: extension-apiserver-authentication
+  selfLink: /api/v1/namespaces/kube-system/configmaps/extension-apiserver-authentication

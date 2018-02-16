@@ -1,0 +1,172 @@
+apiVersion: v1
+data:
+  alerts: "ALERT BH_Qps\n    IF bh_total_requests{endpoint=\"overall\",timeinterval=\"recent-avg\"}
+    * on(instance,name) group_left(environment)app_pod_info{environment=\"prod\"}==0
+    \n    FOR 10m\n    ANNOTATIONS {\n    summary = \"BH pod {{ $labels.instance }}
+    is not receiving traffic\",\n    description = \"{{ $labels.instance }} qps is
+    less than 5. Please check if ingress is configured properly and ingress controller
+    is ingesting traffic. (current value: {{ $value }} qps)\",\n    }\nALERT DataSet_Updates\n
+    \   IF data_set_updates * on(instance,name) group_left(environment)app_pod_info{environment=\"prod\"}
+    == 0\n    FOR 61m\n    ANNOTATIONS {\n    summary = \"{{ $labels.name }} {{ $labels.instance
+    }} no data sets were updated in last 60 minutes\",\n    description = \"No data
+    sets were updated in last 60 minutes. Please check if data services are up and
+    running. (current value: {{ $value }} updates)\",\n    }\n\nALERT DataSet_Exceptions\n
+    \   IF data_set_exceptions * on(instance,name) group_left(environment)app_pod_info{environment=\"prod\"}
+    > 0\n    FOR 10m\n    ANNOTATIONS {\n    summary = \"{{ $labels.name }} {{ $labels.instance
+    }} {{ $labels.ds_name }} has data set reload failure {{ $labels.error }} for last
+    10 minutes\",\n    description = \"There is data set which was not reloaded for
+    more than 10 minutes due to errors. Please check if dataservices are up and running,
+    the data set is present and the data is correct depending on the type of error.\",\n
+    \   }\nALERT FS_Free\n    IF topk(1, (node_filesystem_avail{device=~\"/dev/sd.*\"}
+    / node_filesystem_size{device=~\"/dev/sd.*\"}) * on(instance) group_left(nodename)
+    node_uname_info) by(device,nodename) < 0.2\n    FOR 10m\n    ANNOTATIONS {\n    summary
+    = \"{{ $labels.device }} on {{ $labels.nodename }} has less than 20% free\",\n
+    \   description = \"We might be running out of disk space on a device. Please
+    check what is consuming disk space and clean it up if possible. (current value:
+    free {{ $value }} %)\",\n    }ALERT K8S_Node_NotReady\n    IF kube_node_status_ready{condition=\"true\"}
+    != 1\n    FOR 10m\n    ANNOTATIONS {\n    summary = \"Node {{ $labels.node }}
+    is not ready\",\n    description = \"Kubelet is not running on the node. Please
+    check if the the docker and kubelet services are running on the box and for errors
+    in kubelet logs.\",\n    }\n\nALERT K8S_Proxy_NotReady\n    IF kube_pod_status_ready{pod=~\"kube-proxy.*\",condition=\"true\"}
+    * on(pod) group_left(node) kube_pod_info != 1\n    FOR 10m\n    ANNOTATIONS {\n
+    \   summary = \"Proxy on node {{ $labels.node }} is not ready\",\n    description
+    = \"The proxy pod is not running. Please check if the the docker and kubelet services
+    are running on the box and for errors in the pod logs.\",\n    }\n\nALERT K8S_ApiServer_NotReady\n
+    \   IF kube_pod_status_ready{pod=~\"kube-apiserver.*\",condition=\"true\"} * on(pod)
+    group_left(node) kube_pod_info != 1\n    FOR 10m\n    ANNOTATIONS {\n    summary
+    = \"Api server on node {{ $labels.node }} is not ready\",\n    description = \"The
+    api server pod is not running. Please check if the the docker and kubelet services
+    are running on the box and for errors in the pod logs.\",\n    }\n\nALERT K8S_ControlManager_NotReady\n
+    \   IF kube_pod_status_ready{pod=~\"kube-controller-manager.*\",condition=\"true\"}
+    * on(pod) group_left(node) kube_pod_info != 1\n    FOR 10m\n    ANNOTATIONS {\n
+    \   summary = \"Control manager on node {{ $labels.node }} is not ready\",\n    description
+    = \"The control manager pod is not running. Please check if the the docker and
+    kubelet services are running on the box and for errors in the pod logs.\",\n    }\n\nALERT
+    K8S_Scheduler_NotReady\n    IF kube_pod_status_ready{pod=~\"kube-scheduler.*\",condition=\"true\"}
+    * on(pod) group_left(node) kube_pod_info != 1\n    FOR 10m\n    ANNOTATIONS {\n
+    \   summary = \"Scheduler on node {{ $labels.node }} is not ready\",\n    description
+    = \"The scheduler pod is not running. Please check if the the docker and kubelet
+    services are running on the box and for errors in the pod logs.\",\n    }\n\nALERT
+    K8S_EtcdServer_NotReady\n    IF kube_pod_status_ready{pod=~\"etcd-server.*\",condition=\"true\"}
+    * on(pod) group_left(node) kube_pod_info != 1\n    FOR 10m\n    ANNOTATIONS {\n
+    \   summary = \"Scheduler on node {{ $labels.node }} is not ready\",\n    description
+    = \"The scheduler pod is not running. Please check if the the docker and kubelet
+    services are running on the box and for errors in the pod logs.\",\n    }\n\nALERT
+    K8S_Flannel_NotReady\n    IF kube_pod_status_ready{pod=~\"kube-flannel.*\",condition=\"true\"}
+    * on(pod) group_left(node) kube_pod_info != 1\n    FOR 10m\n    ANNOTATIONS {\n
+    \   summary = \"Flannel on node {{ $labels.node }} is not ready\",\n    description
+    = \"The flannel pod is not running. Please check if the daemon set exists and
+    the label selector is not preventing th epod from being deployed on this node.
+    Check pod logs and whether the docker and kubelet services are running on the
+    box.\",\n    }\nALERT Metrics_Node\n    IF up{kubernetes_name=\"prometheus-prometheus-node-exporter\"}
+    * on(instance) group_left(nodename) node_uname_info == 0\n    FOR 10m\n    ANNOTATIONS
+    {\n    summary = \"Unable to scrape metrics from node {{ $labels.nodename }} \",\n
+    \   description = \"The prometheus node exporter is not running or the node itself
+    might be down. Please check if the docker and kubelet services are running on
+    the box and whether node exporter daemon set was able to start a pod on the node.\",\n
+    \   }ALERT Swap_Used\n    IF (node_memory_SwapTotal - node_memory_SwapFree) *
+    on(instance) group_left(nodename) node_uname_info > 1073741824\n    FOR 60m\n
+    \   ANNOTATIONS {\n    summary = \"{{ $labels.nodename }} is using more than 1GB
+    of swap\",\n    description = \"Using swap might decrease performance of pods
+    running on the node. Please check swapiness settings, the memory usage of pods
+    and whether they have limits specified. If needed kill pods or restart processes
+    running on the node. (current value: used {{ $value }} bytes)\",\n    }"
+  prometheus.yml: "global:\n  scrape_interval:     15s\n  evaluation_interval: 15s\n\nrule_files:\n
+    \ - /etc/config/rules\n  - /etc/config/alerts\n\nscrape_configs:\n  - job_name:
+    bh-stage\n    metrics_path: /bh/metrics\n    static_configs:\n      - targets:\n
+    \       - lga-bh00.pulse.prod:8080\n        - lga-bh00.pulse.prod:8081\n        -
+    lga-bh00.pulse.prod:8082\n        - lga-bh00.pulse.prod:8083\n        labels:\n
+    \         name: bh-service  \n\n  - job_name: prometheus\n    static_configs:\n
+    \     - targets:\n        - localhost:9090\n  # Scrape configurations for running
+    Prometheus on a Kubernetes cluster.\n  # This uses separate scrape configs for
+    cluster components (i.e. API server, node)\n  # and services to allow each to
+    use different authentication configs.\n  #\n  # Kubernetes labels will be added
+    as Prometheus labels on metrics via the\n  # `labelmap` relabeling action.\n\n
+    \ # Scrape config for API servers.\n  - job_name: kubernetes-apiservers\n\n    #
+    Default to scraping over https. If required, just disable this or change to\n
+    \   # `http`.\n    scheme: https\n\n    # This TLS & bearer token file config
+    is used to connect to the actual scrape\n    # endpoints for cluster components.
+    This is separate to discovery auth\n    # configuration (`in_cluster` below) because
+    discovery & scraping are two\n    # separate concerns in Prometheus.\n    tls_config:\n
+    \     ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt\n      # If
+    your node certificates are self-signed or use a different CA to the\n      # master
+    CA, then disable certificate verification below. Note that\n      # certificate
+    verification is an integral part of a secure infrastructure\n      # so this should
+    only be disabled in a controlled environment. You can\n      # disable certificate
+    verification by uncommenting the line below.\n      #\n      # insecure_skip_verify:
+    true\n    bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token\n\n
+    \   # Keep only the default/kubernetes service endpoints for the https port. This\n
+    \   # will add targets for each API server which Kubernetes adds an endpoint to\n
+    \   # the default/kubernetes service.\n    relabel_configs:\n      - source_labels:
+    [__meta_kubernetes_namespace, __meta_kubernetes_service_name, __meta_kubernetes_endpoint_port_name]\n
+    \       action: keep\n        regex: default;kubernetes;https\n\n  - job_name:
+    kubernetes-nodes\n\n    # Default to scraping over https. If required, just disable
+    this or change to\n    # `http`.\n    scheme: https\n\n    # This TLS & bearer
+    token file config is used to connect to the actual scrape\n    # endpoints for
+    cluster components. This is separate to discovery auth\n    # configuration (`in_cluster`
+    below) because discovery & scraping are two\n    # separate concerns in Prometheus.\n
+    \   tls_config:\n      ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt\n
+    \     # If your node certificates are self-signed or use a different CA to the\n
+    \     # master CA, then disable certificate verification below. Note that\n      #
+    certificate verification is an integral part of a secure infrastructure\n      #
+    so this should only be disabled in a controlled environment. You can\n      #
+    disable certificate verification by uncommenting the line below.\n      #\n      #
+    insecure_skip_verify: true\n    bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token\n\n
+    \   kubernetes_sd_configs:\n      - role: node\n\n    relabel_configs:\n      -
+    action: labelmap\n        regex: __meta_kubernetes_node_label_(.+)\n\n  # Scrape
+    config for service endpoints.\n  #\n  # The relabeling allows the actual service
+    scrape endpoint to be configured\n  # via the following annotations:\n  #\n  #
+    * `prometheus.io/scrape`: Only scrape services that have a value of `true`\n  #
+    * `prometheus.io/scheme`: If the metrics endpoint is secured then you will need\n
+    \ # to set this to `https` & most likely set the `tls_config` of the scrape config.\n
+    \ # * `prometheus.io/path`: If the metrics path is not `/metrics` override this.\n
+    \ # * `prometheus.io/port`: If the metrics are exposed on a different port to
+    the\n  # service then set this appropriately.\n  - job_name: 'kubernetes-service-endpoints'\n\n
+    \   kubernetes_sd_configs:\n      - role: endpoints\n\n    relabel_configs:\n
+    \     - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scrape]\n
+    \       action: keep\n        regex: true\n      - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scheme]\n
+    \       action: replace\n        target_label: __scheme__\n        regex: (https?)\n
+    \     - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_path]\n
+    \       action: replace\n        target_label: __metrics_path__\n        regex:
+    (.+)\n      - source_labels: [__address__, __meta_kubernetes_service_annotation_prometheus_io_port]\n
+    \       action: replace\n        target_label: __address__\n        regex: (.+)(?::\\d+);(\\d+)\n
+    \       replacement: $1:$2\n      - action: labelmap\n        regex: __meta_kubernetes_service_label_(.+)\n
+    \     - source_labels: [__meta_kubernetes_service_namespace]\n        action:
+    replace\n        target_label: kubernetes_namespace\n      - source_labels: [__meta_kubernetes_service_name]\n
+    \       action: replace\n        target_label: kubernetes_name\n\n  # Example
+    scrape config for probing services via the Blackbox Exporter.\n  #\n  # The relabeling
+    allows the actual service scrape endpoint to be configured\n  # via the following
+    annotations:\n  #\n  # * `prometheus.io/probe`: Only probe services that have
+    a value of `true`\n  # - job_name: 'kubernetes-services'\n  #\n  #   metrics_path:
+    /probe\n  #   params:\n  #     module: [http_2xx]\n  #\n  #   kubernetes_sd_configs:\n
+    \ #     - role: service\n  #\n  #   relabel_configs:\n  #     - source_labels:
+    [__meta_kubernetes_service_annotation_prometheus_io_probe]\n  #       action:
+    keep\n  #       regex: true\n  #     - source_labels: [__address__]\n  #       target_label:
+    __param_target\n  #     - target_label: __address__\n  #       replacement: blackbox\n
+    \ #     - source_labels: [__param_target]\n  #       target_label: instance\n
+    \ #     - action: labelmap\n  #       regex: __meta_kubernetes_service_label_(.+)\n
+    \ #     - source_labels: [__meta_kubernetes_service_namespace]\n  #       target_label:
+    kubernetes_namespace\n  #     - source_labels: [__meta_kubernetes_service_name]\n
+    \ #       target_label: kubernetes_name\n\n  # Example scrape config for pods\n
+    \ #\n  # The relabeling allows the actual pod scrape endpoint to be configured
+    via the\n  # following annotations:\n  #\n  # * `prometheus.io/scrape`: Only scrape
+    pods that have a value of `true`\n  # * `prometheus.io/path`: If the metrics path
+    is not `/metrics` override this.\n  # * `prometheus.io/port`: Scrape the pod on
+    the indicated port instead of the default of `9102`.\n  - job_name: 'kubernetes-pods'\n\n
+    \   kubernetes_sd_configs:\n      - role: pod\n\n    relabel_configs:\n      -
+    source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]\n        action:
+    keep\n        regex: true\n      - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]\n
+    \       action: replace\n        target_label: __metrics_path__\n        regex:
+    (.+)\n      - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]\n
+    \       action: replace\n        regex: (.+):(?:\\d+);(\\d+)\n        replacement:
+    ${1}:${2}\n        target_label: __address__\n      - action: labelmap\n        regex:
+    __meta_kubernetes_pod_label_(.+)\n      - source_labels: [__meta_kubernetes_pod_namespace]\n
+    \       action: replace\n        target_label: kubernetes_namespace\n      - source_labels:
+    [__meta_kubernetes_pod_name]\n        action: replace\n        target_label: kubernetes_pod_name
+    \ "
+  rules: ""
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: prometheus-prometheus-server
+  selfLink: /api/v1/namespaces/monitoring/configmaps/prometheus-prometheus-server

@@ -1,0 +1,37 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    ingress.kubernetes.io/affinity: cookie
+    ingress.kubernetes.io/session-cookie-hash: sha1
+    ingress.kubernetes.io/session-cookie-name: route
+    ingress.kubernetes.io/ssl-redirect: "false"
+    kubernetes.io/ingress.class: nginx
+  creationTimestamp: null
+  generation: 1
+  name: bh-ingress-nginx
+  selfLink: /apis/extensions/v1beta1/namespaces/bh/ingresses/bh-ingress-nginx
+spec:
+  rules:
+  - host: bh.contextweb.com
+    http:
+      paths:
+      - backend:
+          serviceName: bh-service
+          servicePort: 8080
+        path: /
+  - host: bh.lga.contextweb.com
+    http:
+      paths:
+      - backend:
+          serviceName: bh-service
+          servicePort: 8080
+        path: /
+  - http:
+      paths:
+      - backend:
+          serviceName: bh-service
+          servicePort: 8080
+        path: /bh/
+status:
+  loadBalancer: {}

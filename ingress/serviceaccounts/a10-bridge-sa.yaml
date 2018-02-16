@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"v1","kind":"ServiceAccount","metadata":{"annotations":{},"name":"a10-bridge","namespace":"ingress"}}
+  creationTimestamp: null
+  name: a10-bridge
+  selfLink: /api/v1/namespaces/ingress/serviceaccounts/a10-bridge
+secrets:
+- name: a10-bridge-token-xl000

@@ -1,0 +1,8 @@
+apiVersion: v1
+data:
+  osd-dirs: '{"/var/lib/rook":0}'
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: rook-ceph-osd-lga-kubnode03-config
+  selfLink: /api/v1/namespaces/rook/configmaps/rook-ceph-osd-lga-kubnode03-config

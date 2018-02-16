@@ -1,0 +1,22 @@
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: Role
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"rbac.authorization.k8s.io/v1beta1","kind":"Role","metadata":{"annotations":{},"name":"a10-bridge-role","namespace":"ingress"},"rules":[{"apiGroups":["","extensions"],"resources":["daemonsets","configmaps","nodes"],"verbs":["list"]}]}
+  creationTimestamp: 2018-02-06T02:10:03Z
+  name: a10-bridge-role
+  namespace: ingress
+  resourceVersion: "53158515"
+  selfLink: /apis/rbac.authorization.k8s.io/v1beta1/namespaces/ingress/roles/a10-bridge-role
+  uid: d7c3df55-0ae2-11e8-8c1a-005056a811cf
+rules:
+- apiGroups:
+  - ""
+  - extensions
+  resources:
+  - daemonsets
+  - configmaps
+  - nodes
+  verbs:
+  - list

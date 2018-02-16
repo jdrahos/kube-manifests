@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  annotations:
+    control-plane.alpha.kubernetes.io/leader: '{"holderIdentity":"2a332b37-f019-11e7-997f-0a58ac1e1602","leaseDurationSeconds":15,"acquireTime":"2018-01-08T14:25:19Z","renewTime":"2018-01-08T14:25:21Z","leaderTransitions":0}'
+    pv.kubernetes.io/bind-completed: "yes"
+    pv.kubernetes.io/bound-by-controller: "yes"
+    volume.beta.kubernetes.io/storage-provisioner: rook.io/block
+  creationTimestamp: null
+  labels:
+    component: elasticsearch
+    role: data
+  name: storage-es-data-0
+  selfLink: /api/v1/namespaces/logging/persistentvolumeclaims/storage-es-data-0
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: rook-block
+  volumeName: pvc-c1486ed7-f47f-11e7-9f45-005056a8c750
+status: {}

@@ -1,14 +1,7 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  annotations:
-    kubectl.kubernetes.io/last-applied-configuration: |
-      {"apiVersion":"v1","kind":"Namespace","metadata":{"annotations":{},"name":"bh","namespace":""},"spec":{"finalizers":["kubernetes"]}}
-  creationTimestamp: null
   name: bh
-  selfLink: /api/v1/namespaces/bh
 spec:
   finalizers:
   - kubernetes
-status:
-  phase: Active

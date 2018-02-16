@@ -443,6 +443,5 @@ data:
 
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
   name: bh-configs
-  selfLink: /api/v1/namespaces/bh/configmaps/bh-configs
+  namspace: bh

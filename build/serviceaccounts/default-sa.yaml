@@ -1,8 +1,0 @@
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  creationTimestamp: null
-  name: default
-  selfLink: /api/v1/namespaces/build/serviceaccounts/default
-secrets:
-- name: default-token-qcfp9

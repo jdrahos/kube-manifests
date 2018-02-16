@@ -1,12 +1,8 @@
 apiVersion: v1
 kind: Service
 metadata:
-  annotations:
-    kubectl.kubernetes.io/last-applied-configuration: |
-      {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"name":"memcached","namespace":"cicd"},"spec":{"clusterIP":"None","ports":[{"name":"memcached","port":11211}],"selector":{"name":"memcached"}}}
-  creationTimestamp: null
   name: memcached
-  selfLink: /api/v1/namespaces/cicd/services/memcached
+  namspace: cicd
 spec:
   clusterIP: None
   ports:
@@ -18,5 +14,3 @@ spec:
     name: memcached
   sessionAffinity: None
   type: ClusterIP
-status:
-  loadBalancer: {}

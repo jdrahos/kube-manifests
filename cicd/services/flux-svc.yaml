@@ -1,12 +1,8 @@
 apiVersion: v1
 kind: Service
 metadata:
-  annotations:
-    kubectl.kubernetes.io/last-applied-configuration: |
-      {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"name":"flux","namespace":"cicd"},"spec":{"ports":[{"nodePort":30303,"port":80,"targetPort":3030}],"selector":{"name":"flux"},"type":"NodePort"}}
-  creationTimestamp: null
   name: flux
-  selfLink: /api/v1/namespaces/cicd/services/flux
+  namspace: cicd
 spec:
   clusterIP: <unknown>
   externalTrafficPolicy: Cluster
@@ -18,5 +14,3 @@ spec:
     name: flux
   sessionAffinity: None
   type: NodePort
-status:
-  loadBalancer: {}

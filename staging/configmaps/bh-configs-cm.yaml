@@ -444,6 +444,6 @@ data:
 
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
   name: bh-configs
-  selfLink: /api/v1/namespaces/staging/configmaps/bh-configs
+  naemspace: staging
+

@@ -7,11 +7,10 @@ metadata:
     prometheus.io/scrape: "true"
     traefik.backend.circuitbreaker: NetworkErrorRatio() > 0.9
     traefik.backend.loadbalancer.stickiness: "true"
-  creationTimestamp: null
   labels:
     name: bh-service
   name: bh-service
-  selfLink: /api/v1/namespaces/staging/services/bh-service
+  naemspace: staging
 spec:
   clusterIP: <unknown>
   ports:
@@ -27,5 +26,3 @@ spec:
     app: bh-app
   sessionAffinity: ClientIP
   type: ClusterIP
-status:
-  loadBalancer: {}

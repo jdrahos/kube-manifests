@@ -60,6 +60,5 @@ data:
     -Dorg.apache.logging.log4j.simplelog.StatusLogger.level=TRACE
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
   name: kafka-message-producer-configs
-  selfLink: /api/v1/namespaces/kafka-message-producer/configmaps/kafka-message-producer-configs
+  namspace: kafka-message-producer

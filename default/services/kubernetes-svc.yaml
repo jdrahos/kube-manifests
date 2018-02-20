@@ -6,7 +6,6 @@ metadata:
     provider: kubernetes
   name: kubernetes
 spec:
-  clusterIP: <unknown>
   ports:
   - name: https
     port: 443

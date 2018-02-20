@@ -3,7 +3,6 @@ kind: Service
 metadata:
   name: kibana
 spec:
-  clusterIP: <unknown>
   ports:
   - name: ui
     port: 5601

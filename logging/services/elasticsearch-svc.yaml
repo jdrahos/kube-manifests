@@ -7,7 +7,6 @@ metadata:
   name: elasticsearch
   namespace: logging
 spec:
-  clusterIP: <unknown>
   ports:
   - name: http
     port: 9200

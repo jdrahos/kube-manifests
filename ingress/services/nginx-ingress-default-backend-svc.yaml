@@ -6,7 +6,6 @@ metadata:
   name: nginx-ingress-default-backend
   namespace: ingress
 spec:
-  clusterIP: <unknown>
   ports:
   - port: 80
     protocol: TCP

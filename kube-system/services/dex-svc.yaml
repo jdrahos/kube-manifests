@@ -4,7 +4,6 @@ metadata:
   name: dex
   namespace: kube-system
 spec:
-  clusterIP: <unknown>
   externalTrafficPolicy: Cluster
   ports:
   - name: dexs

@@ -9,7 +9,6 @@ metadata:
   name: weave-scope-app
   namespace: kube-system
 spec:
-  clusterIP: <unknown>
   ports:
   - name: app
     port: 80

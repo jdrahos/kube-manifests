@@ -1,0 +1,449 @@
+apiVersion: v1
+data:
+  fluentd.options: |
+    <source>
+      @type tcp
+      tag java
+      format json
+      port 5170
+    </source>
+    <source>
+        @type tail
+        tag gc
+        path /var/log/jetty/gc.log
+        format multiline
+        # 2017-12-07T20:09:59.384+0000:
+        format1 /(?<time>\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}[+-]\d{4}): (?<message>.*)/
+        time_format %Y-%m-%dT%H:%M:%S.%L%Z
+    </source>
+    <source>
+        @type tail
+        tag jvm
+        path /var/log/jetty/jvm.log
+        format none
+    </source>
+    <source>
+        @type tail
+        tag out
+        path /var/log/jetty/jetty-out.log
+        format none
+    </source>
+
+    <filter java>
+        @type record_transformer
+        enable_ruby
+        <record>
+            timesecond ${Float(record["timeMillis"]) / 1000}
+            # No need to map level for custom appender
+            # todo jetty still use old JsonLayout
+            # See org.apache.logging.log4j.spi.StandardLevel
+            #levelNum ${ record["level"] == 'OFF' ? 0 : (record["level"] == 'FATAL' ? 100 : (record["level"] == 'ERROR' ? 200 : (record["level"] == 'WARN' ? 300 : (record["level"] == 'INFO' ? 400 : (record["level"] == 'DEBUG' ? 500 : (record["level"] == 'TRACE' ? 600 : (record["level"] == 'ALL' ? 1000 : 0))))))) }
+        </record>
+        remove_keys ["timeMillis", "loggerFqcn", "endOfBatch", "timesecond", "parameterCount", "formattedMessage"]
+        renew_time_key timesecond
+    </filter>
+    <filter {gc,jvm,out}>
+        @type record_transformer
+        <record>
+            type ${tag}
+            level INFO
+            levelNum 400
+        </record>
+    </filter>
+    <filter **>
+        @type record_transformer
+        <record>
+            app "bh"
+            kubPod "#{ENV['HOSTNAME']}"
+            kubNs "#{ENV['KUB_NAMESPACE']}"
+            kubNode "#{ENV['KUB_NODE']}"
+            clusterName "#{ENV['CLUSTER_NAME']}"
+            clusterEnv "#{ENV['CONFIG_ENV']}"
+            clusterDc "#{ENV['CONFIG_DC']}"
+        </record>
+    </filter>
+
+    <match **>
+        @type elasticsearch
+        logstash_format true
+        logstash_prefix logstash-bh
+        time_precision 3
+        host elasticsearch.logging.svc.cluster.local #(optional; default="localhost")
+        port 9200 #(optional; default=9200)
+        #index_name <index name> #(optional; default=fluentd)
+        #type_name <type name> #(optional; default=fluentd)
+
+
+        <buffer>
+          @type memory
+          flush_interval 1s
+          retry_forever false
+          chunk_limit_size 8m
+          queue_limit_length 64
+          overflow_action drop_oldest_chunk
+          retry_wait 10
+        </buffer>
+
+    </match>
+  java.options: "-server\n-XX:+UnlockDiagnosticVMOptions\n-XX:+LogVMOutput\n-XX:LogFile=/var/log/jetty/jvm.log\n\n-Djava.net.preferIPv4Stack=true\n\n-XX:+UseG1GC\n-XX:MaxGCPauseMillis=75\n-XX:ParallelGCThreads=6\n-XX:+DisableExplicitGC\n\n-XX:+PrintGCDateStamps\n-XX:+PrintGCDetails\n-XX:+PrintClassHistogramAfterFullGC\n-XX:+PrintConcurrentLocks\n-XX:-OmitStackTraceInFastThrow\n-Xloggc:/var/log/jetty/gc.log\n-XX:+UseGCLogFileRotation\n-XX:NumberOfGCLogFiles=1\n\n-Xmx6g\n-Xms6g\n-Xss256k\n\n-Dinstance=pod\n\n-Denv.CW_CONFIG_LOCAL_CACHE=/opt/cwdata/config\n\n-DLog4jContextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector\n-DAsyncLogger.RingBufferSize=1024\n-DAsyncLogger.ThreadNameStrategy=UNCACHED\n-Dconfig.app.name=bh
+    \   \n\n-Dorg.eclipse.jetty.util.log.class=org.eclipse.jetty.util.log.Slf4jLog\n"
+  jetty-log4j2.xml: |
+    <?xml version="1.0" encoding="UTF-8"?>
+    <Configuration>
+        <Appenders>
+            <Socket name="fluentd" protocol="tcp" host="localhost" port="5170">
+                <JsonLayout complete="false" compact="true" eventEol="true"
+                            includeStacktrace="false" stacktraceAsString="true">
+                    <KeyValuePair key="type" value="jetty"/>
+                </JsonLayout>
+            </Socket>
+
+            <Console name="console" target="SYSTEM_OUT">
+                <PatternLayout pattern="%d{mm:ss,SSS} [jetty] %-5p [%25.25t] %40.40c - %m%n"/>
+            </Console>
+
+        </Appenders>
+        <Loggers>
+            <Root level="info">
+                <AppenderRef ref="fluentd"/>
+            </Root>
+        </Loggers>
+    </Configuration>
+  preJetty.sh: |
+    export CW_CONFIG_PREFIX="$CONFIG_LINK$CONFIG_ENV"
+
+    # For custom local configuration
+    #export CW_CONFIG_PREFIX=http://configuration-nginx.staging.svc.cluster.local
+  prometheus.config.yaml: "lowercaseOutputName: true\nlowercaseOutputLabelNames: true\nwhitelistObjectNames:
+    \n  - \"com.contextweb.adserving.bh.monitoring:name=*,type=EndpointStats\"\n  -
+    \"com.contextweb.adserving.util:name=*,type=DynamicPassbackCounters\"\n  - \"com.contextweb.commons.logging.kafka.monitoring:*\"\n
+    \ - \"com.contextweb.commons.utils:name=*,type=CacheCounters\"\n  - \"com.contextweb.data.services.dataset.stats:*\"\n
+    \ - \"com.contextweb.stats:*\"\n  - \"com.contextweb.util.counters:name=applicationCounters,type=ApplicationCounters\"\n
+    \ - \"com.pulsepoint.exchange.debugger.client:name=*,type=DebuggerClientStats\"\n
+    \ - \"kafka.producer:type=producer-topic-metrics,client-id=*,topic=*\"\n  - \"org.eclipse.jetty.util.thread:type=queuedthreadpool,id=*\"\n
+    \ - \"com.contextweb.adserving.monitoring:*\"\nrules:\n  - pattern: com.contextweb.adserving.bh.monitoring<name=(\\S*)EndpointStats,
+    type=EndpointStats><>General-Stats-(\\S*)-Exceptions-(current|recent-avg)\n    name:
+    \"bh_exceptions\"\n    labels:\n      endpoint: \"$1\"\n      timeInterval: \"$3\"\n
+    \     error: \"$2\"\n    type: GAUGE\n    help: \"\"\n  - pattern: com.contextweb.adserving.bh.monitoring<name=(\\S*)EndpointStats,
+    type=EndpointStats><>General-Stats-(\\S*)-(current|recent-avg)\n    name: \"bh_$2\"\n
+    \   labels: \n      endpoint: \"$1\"\n      timeInterval: \"$3\"\n    type: GAUGE\n
+    \   help: \"\"\n  - pattern: com.contextweb.adserving.util<name=(\\S*), type=DynamicPassbackCounters><>Dynamic-pass-back-Throttled-request-percentage-(current|recent-avg)\n
+    \   name: \"bh_dynamic_passback_percent\"\n    labels: \n      endpoint: \"$1\"\n
+    \     timeInterval: \"$2\"\n    type: GAUGE\n    help: \"\"\n  - pattern: com.contextweb.commons.logging.kafka.monitoring<name=asyncLogHandlerCounters,
+    type=AsyncLogHandlerCounters><>Log-handler-stats-(\\S*)-(current|recent-avg)\n
+    \   name: \"log_handler_$1\"\n    labels: \n      timeInterval: \"$2\"\n    type:
+    GAUGE\n    help: \"\"\n  - pattern: com.contextweb.commons.logging.kafka.monitoring<name=logDispatcherCounters,
+    type=LogDispatcherCounters><>New-kafka-API-(\\S*)-(current|recent-avg)\n    name:
+    \"log_dispatcher_$1\"\n    labels: \n      timeInterval: \"$2\"\n    type: GAUGE\n
+    \   help: \"\"\n  - pattern: com.contextweb.commons.utils<name=(\\S*)Counters,
+    type=CacheCounters><>Cache-Stats-Cache-(add|get|set|getbulk)s?-(current|recent-avg)\n
+    \   name: \"cache_request_count\"\n    labels: \n      cache: \"$1\"\n      operation:
+    \"$2\"\n      timeInterval: \"$3\"\n    type: GAUGE\n    help: \"\"\n  - pattern:
+    com.contextweb.commons.utils<name=(\\S*)Counters, type=CacheCounters><>Cache-Stats-Average-(add|get|set|getbulk)s?-Response-Time-(current|recent-avg)\n
+    \   name: \"cache_response_time\"\n    labels: \n      cache: \"$1\"\n      operation:
+    \"$2\"\n      timeInterval: \"$3\"\n    type: GAUGE\n    help: \"\"\n  - pattern:
+    com.contextweb.commons.utils<name=(\\S*)Counters, type=CacheCounters><>Cache-Stats-Cache-(add|get|set|getbulk)s?-(\\S*)-(current|recent-avg)\n
+    \   name: \"cache_$3\"\n    labels: \n      cache: \"$1\"\n      operation: \"$2\"\n
+    \     timeInterval: \"$4\"\n    type: GAUGE\n    help: \"\"\n  - pattern: com.contextweb.commons.utils<name=(\\S*)Counters,
+    type=CacheCounters><>Cache-Stats-Cache-(hit|miss)-(current|recent-avg)\n    name:
+    \"cache_$2\"\n    labels: \n      cache: \"$1\"\n      operation: \"\"\n      timeInterval:
+    \"$3\"\n    type: GAUGE\n    help: \"\"\n  - pattern: com.contextweb.data.services.dataset.stats<name=Overall><>Dataset-Stats-Error-Types-(\\S*)-current\n
+    \   name: \"data_set_exceptions\"\n    labels: \n      ds_name: \"\"\n      error:
+    \"$1\"\n      timeInterval: \"current\"\n    type: GAUGE\n    help: \"\"\n  -
+    pattern: com.contextweb.data.services.dataset.stats<name=(\\S*)><>Dataset-Stats-Exceptions-current\n
+    \   name: \"data_set_exceptions\"\n    labels: \n      ds_name: \"$1\"\n      error:
+    \"\"\n      timeInterval: \"current\"\n    type: GAUGE\n    help: \"\"\n  - pattern:
+    com.contextweb.data.services.dataset.stats<name=Overall><>Dataset-Stats-Total-Updates-current\n
+    \   name: \"data_set_updates\"\n    labels: \n      ds_name: \"\"\n      timeInterval:
+    \"current\"\n    type: GAUGE\n    help: \"\"\n  - pattern: com.contextweb.stats<name=(\\S*)ServiceStats,
+    type=.*><>.*(requests|Avg-Time|Max-Time)-(current|recent-avg)\n    name: \"service_$2\"\n
+    \   labels: \n      service_name: \"$1\"\n      timeInterval: \"$3\"\n    type:
+    GAUGE\n    help: \"\"\n  - pattern: com.contextweb.stats<name=contextualServiceStats,
+    type=ContextualServiceStats><>xt2-XT3-Local-Cache-Errors-(current|recent-avg)\n
+    \   name: \"cache_exceptions\"\n    labels: \n      cache: \"xt3_local\"\n      operation:
+    \"\"\n      timeInterval: \"$1\"\n    type: GAUGE\n    help: \"\"\n  - pattern:
+    com.contextweb.stats<name=contextualServiceStats, type=ContextualServiceStats><>xt2-XT3-Local-Cache-Hit-_-(current|recent-avg)\n
+    \   name: \"cache_hit_ratio\"\n    labels: \n      cache: \"xt3_local\"\n      operation:
+    \"get\"\n      timeInterval: \"$1\"\n    type: GAUGE\n    help: \"\"\n  - pattern:
+    com.contextweb.stats<name=contextualServiceStats, type=ContextualServiceStats><>xt2-XT3-Local-Cache-Puts-(current|recent-avg)\n
+    \   name: \"cache_request_count\"\n    labels: \n      cache: \"xt3_local\"\n
+    \     operation: \"get\"\n      timeInterval: \"$1\"\n    type: GAUGE\n    help:
+    \"\"\n  - pattern: com.contextweb.stats<name=geoServiceStats, type=GeoServiceStats><>geo-NetAcuity-(Requests|Timeout)-(current|recent-avg)\n
+    \   name: \"service_$1\"\n    labels: \n      service_name: \"net_acuity\"\n      timeInterval:
+    \"$2\"\n    type: GAUGE\n    help: \"\"\n  - pattern: com.contextweb.stats<name=geoServiceStats,
+    type=GeoServiceStats><>geo-NetAcuity-Avg-Resp-Time-(current|recent-avg)\n    name:
+    \"service_avg-time\"\n    labels: \n      service_name: \"net_acuity\"\n      timeInterval:
+    \"$1\"\n    type: GAUGE\n    help: \"\"\n  - pattern: com.contextweb.stats<name=geoServiceStats,
+    type=GeoServiceStats><>geo-NetAcuity-(Connection-Errors|Empty-Response)-(current|recent-avg)\n
+    \   name: \"net_acuity_$1\"\n    labels: \n      service_name: \"net_acuity\"\n
+    \     timeInterval: \"$2\"\n    type: GAUGE\n    help: \"\"\n  - pattern: com.contextweb.util.counters<name=applicationCounters,
+    type=ApplicationCounters><>(QPS|LifetimeRequests)\n    name: \"app_$1\"\n    type:
+    GAUGE\n    help: \"\"\n  - pattern: com.pulsepoint.exchange.debugger.client<name=.*,
+    type=DebuggerClientStats><>Debugger-(\\S*)_-(current|recent-avg)\n    name: \"debugger_$1\"\n
+    \   labels: \n      timeInterval: \"$2\"\n    type: GAUGE\n    help: \"\"\n  -
+    pattern: com.pulsepoint.exchange.debugger.client<name=.*, type=DebuggerClientStats><>Debugger-(\\S*)-(current|recent-avg)\n
+    \   name: \"debugger_$1\"\n    labels: \n      timeInterval: \"$2\"\n    type:
+    GAUGE\n    help: \"\"\n  - pattern: kafka.producer<type=producer-topic-metrics,
+    client-id=.*, topic=(\\S*)><>(\\S*)\n    name: \"kafka_producer_$2\"\n    labels:
+    \n      topic: \"$1\"\n    type: GAUGE\n    help: \"\"\n  - pattern: org.eclipse.jetty.util.thread<type=queuedthreadpool,
+    id=.*><>(busyThreads|threads|queueSize|maxThreads)\\b\n    name: \"jetty_thread_pool_$1\"\n
+    \   type: GAUGE\n    help: \"\"\n  - pattern: com.contextweb.adserving.monitoring<name=(\\S*),
+    type=PodInfoBean, env=(\\S*)><>info\n    name: \"app_pod_info\"\n    labels:\n
+    \     pod: \"$1\"\n      environment: \"$2\"\n    type: GAUGE\n    help: \"\"\n"
+  start.ini: |+
+    #===========================================================
+    # Jetty Startup
+    #
+    # Starting Jetty from this {jetty.home} is not recommended.
+    #
+    # A proper {jetty.base} directory should be configured, instead
+    # of making changes to this {jetty.home} directory.
+    #
+    # See documentation about {jetty.base} at
+    # http://www.eclipse.org/jetty/documentation/current/startup.html
+    #
+    # A demo-base directory has been provided as an example of
+    # this sort of setup.
+    #
+    # $ cd demo-base
+    # $ java -jar ../start.jar
+    #
+    #===========================================================
+
+    # ---------------------------------------
+    # Module: ext
+    # Adds all jar files discovered in $JETTY_HOME/lib/ext
+    # and $JETTY_BASE/lib/ext to the servers classpath.
+    # ---------------------------------------
+    --module=ext
+
+
+    # ---------------------------------------
+    # Module: server
+    # Enables the core Jetty server on the classpath.
+    # ---------------------------------------
+    --module=server
+
+    ### ThreadPool configuration
+    ## Minimum number of threads
+    jetty.threadPool.minThreads=400
+
+    ## Maximum number of threads
+    jetty.threadPool.maxThreads=400
+
+    ## Thread idle timeout (in milliseconds)
+    jetty.threadPool.idleTimeout=60000
+
+    ### Common HTTP configuration
+    ## Scheme to use to build URIs for secure redirects
+    # jetty.httpConfig.secureScheme=https
+
+    ## Port to use to build URIs for secure redirects
+    # jetty.httpConfig.securePort=8443
+
+    ## Response content buffer size (in bytes)
+    jetty.httpConfig.outputBufferSize=32768
+
+    ## Max response content write length that is buffered (in bytes)
+    # jetty.httpConfig.outputAggregationSize=8192
+
+    ## Max request headers size (in bytes)
+    jetty.httpConfig.requestHeaderSize=32768
+
+    ## Max response headers size (in bytes)
+    jetty.httpConfig.responseHeaderSize=32768
+
+    ## Whether to send the Server: header
+    jetty.httpConfig.sendServerVersion=true
+
+    ## Whether to send the Date: header
+    # jetty.httpConfig.sendDateHeader=false
+
+    ## Max per-connection header cache size (in nodes)
+    # jetty.httpConfig.headerCacheSize=512
+
+    ## Whether, for requests with content, delay dispatch until some content has arrived
+    # jetty.httpConfig.delayDispatchUntilContent=true
+
+    ## Maximum number of error dispatches to prevent looping
+    # jetty.httpConfig.maxErrorDispatches=10
+
+    ## Maximum time to block in total for a blocking IO operation (default -1 is to use idleTimeout on progress)
+    # jetty.httpConfig.blockingTimeout=-1
+
+    ## Cookie compliance mode of: RFC2965, RFC6265
+    # jetty.httpConfig.cookieCompliance=RFC6265
+
+    ### Server configuration
+    ## Whether ctrl+c on the console gracefully stops the Jetty server
+    # jetty.server.stopAtShutdown=true
+
+    ## Timeout in ms to apply when stopping the server gracefully
+    # jetty.server.stopTimeout=5000
+
+    ## Dump the state of the Jetty server, components, and webapps after startup
+    # jetty.server.dumpAfterStart=false
+
+    ## Dump the state of the Jetty server, components, and webapps before shutdown
+    # jetty.server.dumpBeforeStop=false
+
+    ## The name to uniquely identify this server instance
+    #jetty.defaultSessionIdManager.workerName=node1
+
+    ## How frequently sessions are inspected
+    #jetty.sessionInspectionInterval.seconds=60
+
+
+    # ---------------------------------------
+    # Module: jsp
+    # Enables JSP for all webapplications deployed on the server.
+    # ---------------------------------------
+    --module=jsp
+
+
+    # ---------------------------------------
+    # Module: resources
+    # Adds the $JETTY_HOME/resources and/or $JETTY_BASE/resources
+    # directory to the server classpath. Useful for configuration
+    # property files (eg jetty-logging.properties)
+    # ---------------------------------------
+    --module=resources
+
+
+    # ---------------------------------------
+    # Module: deploy
+    # Enables webapplication deployment from the webapps directory.
+    # ---------------------------------------
+    --module=deploy
+
+    # Monitored directory name (relative to $jetty.base)
+    # jetty.deploy.monitoredDir=webapps
+    # - OR -
+    # Monitored directory path (fully qualified)
+    # jetty.deploy.monitoredPath=/var/www/webapps
+
+    # Defaults Descriptor for all deployed webapps
+    # jetty.deploy.defaultsDescriptorPath=${jetty.base}/etc/webdefault.xml
+
+    # Monitored directory scan period (seconds)
+    # jetty.deploy.scanInterval=1
+
+    # Whether to extract *.war files
+    # jetty.deploy.extractWars=true
+
+    # ---------------------------------------
+    # Module: jstl
+    # Enables JSTL for all webapplications deployed on the server
+    # ---------------------------------------
+    --module=jstl
+
+
+    # ---------------------------------------
+    # Module: websocket
+    # Enable websockets for deployed web applications
+    # ---------------------------------------
+    --module=websocket
+
+
+    # ---------------------------------------
+    # Module: http
+    # Enables a HTTP connector on the server.
+    # By default HTTP/1 is support, but HTTP2C can
+    # be added to the connector with the http2c module.
+    # ---------------------------------------
+    --module=http
+
+    ### HTTP Connector Configuration
+
+    ## Connector host/address to bind to
+    # jetty.http.host=0.0.0.0
+
+    ## Connector port to listen on
+    jetty.http.port=8080
+
+    ## Connector idle timeout in milliseconds
+    jetty.http.idleTimeout=30000
+
+    ## Connector socket linger time in seconds (-1 to disable)
+    # jetty.http.soLingerTime=-1
+
+    ## Number of acceptors (-1 picks default based on number of cores)
+    # jetty.http.acceptors=-1
+
+    ## Number of selectors (-1 picks default based on number of cores)
+    # jetty.http.selectors=-1
+
+    ## ServerSocketChannel backlog (0 picks platform default)
+    # jetty.http.acceptorQueueSize=0
+
+    ## Thread priority delta to give to acceptor threads
+    # jetty.http.acceptorPriorityDelta=0
+
+    ## HTTP Compliance: RFC7230, RFC2616, LEGACY
+    # jetty.http.compliance=RFC7230
+
+
+    # ---------------------------------------
+    # Module: jcl-slf4j
+    # Provides a Java Commons Logging (JCL) binding to SLF4J logging.
+    # ---------------------------------------
+    --module=jcl-slf4j
+
+
+    # ---------------------------------------
+    # Module: jul-slf4j
+    # Provides a Java Util Loggin binding to SLF4J logging.
+    # ---------------------------------------
+    --module=jul-slf4j
+
+
+    # ---------------------------------------
+    # Module: logging-log4j2
+    # Configure jetty logging to use log4j version 2
+    # SLF4J is used as the core logging mechanism.
+    # ---------------------------------------
+    --module=logging-log4j2
+
+
+    # ---------------------------------------
+    # Module: console-capture
+    # Redirects JVMs console stderr and stdout to a log file,
+    # including output from Jetty's default StdErrLog logging.
+    # ---------------------------------------
+    # --module=console-capture
+
+    ## Logging directory (relative to $jetty.base)
+    # jetty.console-capture.dir=/var/log/jetty
+
+    ## Whether to append to existing file
+    # jetty.console-capture.append=true
+
+    ## How many days to retain old log files
+    # jetty.console-capture.retainDays=90
+
+    ## Timezone of the log timestamps
+    # jetty.console-capture.timezone=GMT
+
+    # ---------------------------------------
+    # Module: jmx-remote
+    # Enables remote RMI access to JMX
+    # ---------------------------------------
+    --module=jmx-remote
+
+    ## The host/address to bind the RMI server to.
+    jetty.jmxremote.rmiserverhost=0.0.0.0
+
+    ## The port the RMI server listens to (0 means a random port is chosen).
+    jetty.jmxremote.rmiserverport=8680
+
+    ## The host/address to bind the RMI registry to.
+    jetty.jmxremote.rmiregistryhost=0.0.0.0
+
+    ## The port the RMI registry listens to.
+    jetty.jmxremote.rmiregistryport=8680
+
+kind: ConfigMap
+metadata:
+  name: bh-configs
+  naemspace: staging
+

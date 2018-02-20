@@ -1,0 +1,32 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: traefik
+  name: bh-ingress-traefik
+  namspace: bh
+spec:
+  backend:
+    serviceName: default-http-backend
+    servicePort: 80
+  rules:
+  - host: bh.contextweb.com
+    http:
+      paths:
+      - backend:
+          serviceName: bh-service
+          servicePort: 8080
+        path: /
+  - host: bh.lga.contextweb.com
+    http:
+      paths:
+      - backend:
+          serviceName: bh-service
+          servicePort: 8080
+        path: /
+  - http:
+      paths:
+      - backend:
+          serviceName: bh-service
+          servicePort: 8080
+        path: /bh/

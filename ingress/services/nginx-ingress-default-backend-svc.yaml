@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: nginx-ingress
+  name: nginx-ingress-default-backend
+  namespace: ingress
+spec:
+  clusterIP: <unknown>
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: nginx-ingress
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}

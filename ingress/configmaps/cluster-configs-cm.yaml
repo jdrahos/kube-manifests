@@ -1,0 +1,11 @@
+apiVersion: v1
+data:
+  a10api: "3"
+  a10url: https://lga-lb05.pulse.prod
+  configPrefix: http://lga-configservice.contextweb.prod/ConfigServices_
+  dc: lga
+  name: lga-test
+kind: ConfigMap
+metadata:
+  name: cluster-configs
+  namespace: ingress

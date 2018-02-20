@@ -1,0 +1,17 @@
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  creationTimestamp: 2018-01-31T12:14:39Z
+  labels:
+    addonmanager.kubernetes.io/mode: Reconcile
+    k8s-app: cluster-log-collector
+    kubernetes.io/cluster-service: "true"
+  name: cluster-log-collector
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-log-collector
+subjects:
+- kind: ServiceAccount
+  name: cluster-log-collector
+  namespace: logging

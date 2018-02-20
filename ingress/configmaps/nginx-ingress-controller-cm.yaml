@@ -1,0 +1,14 @@
+apiVersion: v1
+data:
+  disable-access-log: "true"
+  enable-vts-status: "true"
+  proxy-buffer-size: 16k
+  proxy-read-timeout: "3600"
+  proxy-send-timeout: "3600"
+  worker-processes: "12"
+kind: ConfigMap
+metadata:
+  labels:
+    app: nginx-ingress
+  name: nginx-ingress-controller
+  namespace: ingress

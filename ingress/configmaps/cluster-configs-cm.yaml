@@ -7,6 +7,5 @@ data:
   name: lga-test
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
   name: cluster-configs
-  selfLink: /api/v1/namespaces/ingress/configmaps/cluster-configs
+  namespace: ingress

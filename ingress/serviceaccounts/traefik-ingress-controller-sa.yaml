@@ -1,8 +1,7 @@
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  creationTimestamp: null
   name: traefik-ingress-controller
-  selfLink: /api/v1/namespaces/ingress/serviceaccounts/traefik-ingress-controller
+  namespace: ingress
 secrets:
 - name: traefik-ingress-controller-token-fttv7

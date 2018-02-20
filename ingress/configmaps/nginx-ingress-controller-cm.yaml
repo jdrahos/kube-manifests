@@ -8,8 +8,7 @@ data:
   worker-processes: "12"
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
   labels:
     app: nginx-ingress
   name: nginx-ingress-controller
-  selfLink: /api/v1/namespaces/ingress/configmaps/nginx-ingress-controller
+  namespace: ingress

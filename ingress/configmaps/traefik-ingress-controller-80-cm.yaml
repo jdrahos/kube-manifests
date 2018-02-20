@@ -5,8 +5,7 @@ data:
     = \":18080\"      \n[kubernetes]\n"
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
   labels:
     app: traefik-ingress
   name: traefik-ingress-controller-80
-  selfLink: /api/v1/namespaces/ingress/configmaps/traefik-ingress-controller-80
+  namespace: ingress

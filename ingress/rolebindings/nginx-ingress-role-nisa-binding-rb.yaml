@@ -1,12 +1,8 @@
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: RoleBinding
 metadata:
-  creationTimestamp: 2017-12-24T22:04:47Z
   name: nginx-ingress-role-nisa-binding
   namespace: ingress
-  resourceVersion: "49012365"
-  selfLink: /apis/rbac.authorization.k8s.io/v1beta1/namespaces/ingress/rolebindings/nginx-ingress-role-nisa-binding
-  uid: 746d2a27-e8f6-11e7-a815-005056a8c8f3
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role

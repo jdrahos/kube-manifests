@@ -1,12 +1,8 @@
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: Role
 metadata:
-  creationTimestamp: 2018-01-23T16:12:01Z
   name: nginx-ingress-role
   namespace: ingress
-  resourceVersion: "49012557"
-  selfLink: /apis/rbac.authorization.k8s.io/v1beta1/namespaces/ingress/roles/nginx-ingress-role
-  uid: 2517e88c-0058-11e8-81f8-005056a811cf
 rules:
 - apiGroups:
   - ""

@@ -16,7 +16,6 @@ spec:
       app: traefik-ingress-controller
   template:
     metadata:
-      creationTimestamp: null
       labels:
         app: traefik-ingress-controller
     spec:

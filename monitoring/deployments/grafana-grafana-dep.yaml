@@ -26,7 +26,6 @@ spec:
       annotations:
         checksum/config: 675fc08bc7b9a622e8043b77351d9e6da6f42db06782c77cb397511cabec3494
         checksum/dashboards-config: 096130745bea105c3970da4730b06ab797696d04d26d75e64798f2cf8670a4c4
-      creationTimestamp: null
       labels:
         app: grafana-grafana
         component: grafana

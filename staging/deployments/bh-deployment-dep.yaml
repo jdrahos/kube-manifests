@@ -26,7 +26,6 @@ spec:
           -R 100:101 /var/log/pulsepoint/wide"],"resources":{},"volumeMounts":[{"name":"kafka-logs","mountPath":"/var/log/pulsepoint/wide"}],"terminationMessagePath":"/dev/termination-log","terminationMessagePolicy":"File","imagePullPolicy":"Always","securityContext":{"runAsUser":0}}]'
         pod.beta.kubernetes.io/init-containers: '[{"name":"chmod-kmp-dir","image":"busybox","command":["sh","-c","chown
           -R 100:101 /var/log/pulsepoint/wide"],"resources":{},"volumeMounts":[{"name":"kafka-logs","mountPath":"/var/log/pulsepoint/wide"}],"terminationMessagePath":"/dev/termination-log","terminationMessagePolicy":"File","imagePullPolicy":"Always","securityContext":{"runAsUser":0}}]'
-      creationTimestamp: null
       labels:
         app: bh-app
     spec:

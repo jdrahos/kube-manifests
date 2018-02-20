@@ -23,7 +23,6 @@ spec:
     metadata:
       annotations:
         scheduler.alpha.kubernetes.io/critical-pod: ""
-      creationTimestamp: null
       labels:
         k8s-app: kubernetes-dashboard
     spec:

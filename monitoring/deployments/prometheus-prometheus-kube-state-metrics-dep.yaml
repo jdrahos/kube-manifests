@@ -23,7 +23,6 @@ spec:
     type: RollingUpdate
   template:
     metadata:
-      creationTimestamp: null
       labels:
         app: prometheus
         component: kube-state-metrics

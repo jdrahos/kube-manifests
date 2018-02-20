@@ -18,7 +18,6 @@ spec:
       release: prometheus
   template:
     metadata:
-      creationTimestamp: null
       labels:
         app: prometheus
         component: node-exporter

@@ -24,7 +24,6 @@ spec:
         checksum/config: d54aeee7c34bc3c70ea6bf5f16267342d9852b40406332d0838b8efcb861a179
         pod.alpha.kubernetes.io/init-containers: '[{"name":"copy-default-config","image":"jenkins/jenkins:lts","command":["sh","/var/jenkins_config/apply_config.sh"],"resources":{},"volumeMounts":[{"name":"jenkins-home","mountPath":"/var/jenkins_home"},{"name":"jenkins-config","mountPath":"/var/jenkins_config"},{"name":"plugin-dir","mountPath":"/usr/share/jenkins/ref/plugins/"},{"name":"secrets-dir","mountPath":"/usr/share/jenkins/ref/secrets/"}],"terminationMessagePath":"/dev/termination-log","terminationMessagePolicy":"File","imagePullPolicy":"Always"}]'
         pod.beta.kubernetes.io/init-containers: '[{"name":"copy-default-config","image":"jenkins/jenkins:lts","command":["sh","/var/jenkins_config/apply_config.sh"],"resources":{},"volumeMounts":[{"name":"jenkins-home","mountPath":"/var/jenkins_home"},{"name":"jenkins-config","mountPath":"/var/jenkins_config"},{"name":"plugin-dir","mountPath":"/usr/share/jenkins/ref/plugins/"},{"name":"secrets-dir","mountPath":"/usr/share/jenkins/ref/secrets/"}],"terminationMessagePath":"/dev/termination-log","terminationMessagePolicy":"File","imagePullPolicy":"Always"}]'
-      creationTimestamp: null
       labels:
         app: jenkins-jenkins
         chart: jenkins-0.13.0

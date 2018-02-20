@@ -18,7 +18,6 @@ spec:
       weave-scope-component: agent
   template:
     metadata:
-      creationTimestamp: null
       labels:
         app: weave-scope
         name: weave-scope-agent

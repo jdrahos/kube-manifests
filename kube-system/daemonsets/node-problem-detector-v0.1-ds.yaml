@@ -16,7 +16,6 @@ spec:
       version: v0.1
   template:
     metadata:
-      creationTimestamp: null
       labels:
         k8s-app: node-problem-detector
         kubernetes.io/cluster-service: "true"

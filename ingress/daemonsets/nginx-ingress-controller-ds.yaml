@@ -15,7 +15,6 @@ spec:
       app: nginx-ingress-controller
   template:
     metadata:
-      creationTimestamp: null
       labels:
         app: nginx-ingress-controller
     spec:

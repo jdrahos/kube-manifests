@@ -195,6 +195,5 @@ data:
     </system>
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
   name: cluster-log-collector-configs
-  selfLink: /api/v1/namespaces/logging/configmaps/cluster-log-collector-configs
+  namespace: logging

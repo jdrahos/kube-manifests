@@ -53,6 +53,5 @@ data:
       blacklist: ['elasticsearch', 'urllib3']
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
   name: curator-config
-  selfLink: /api/v1/namespaces/logging/configmaps/curator-config
+  namespace: logging

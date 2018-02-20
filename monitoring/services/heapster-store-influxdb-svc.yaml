@@ -7,6 +7,7 @@ metadata:
     heritage: Tiller
     release: heapster-store
   name: heapster-store-influxdb
+  namespace: monitoring
 spec:
   ports:
   - name: api

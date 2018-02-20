@@ -1,14 +1,7 @@
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRoleBinding
 metadata:
-  annotations:
-    kubectl.kubernetes.io/last-applied-configuration: |
-      {"apiVersion":"rbac.authorization.k8s.io/v1beta1","kind":"ClusterRoleBinding","metadata":{"annotations":{},"name":"pp:view","namespace":""},"roleRef":{"apiGroup":"rbac.authorization.k8s.io","kind":"ClusterRole","name":"pp:view"},"subjects":[{"apiGroup":"rbac.authorization.k8s.io","kind":"Group","name":"system:authenticated"}]}
-  creationTimestamp: 2018-02-02T15:51:41Z
   name: pp:view
-  resourceVersion: "52263097"
-  selfLink: /apis/rbac.authorization.k8s.io/v1beta1/clusterrolebindings/pp%3Aview
-  uid: f65f8999-0830-11e8-8c1a-005056a811cf
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole

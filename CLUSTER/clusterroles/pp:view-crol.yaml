@@ -1,14 +1,7 @@
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRole
 metadata:
-  annotations:
-    kubectl.kubernetes.io/last-applied-configuration: |
-      {"apiVersion":"rbac.authorization.k8s.io/v1beta1","kind":"ClusterRole","metadata":{"annotations":{},"name":"pp:view","namespace":""},"rules":[{"apiGroups":[""],"resources":["nodes","bindings","configmaps","cronjobs","daemonsets","deployments","deployments","endpoints","events","horizontalpodautoscalers","ingresses","jobs","limitranges","namespaces","persistentvolumeclaims","pods","pods/log","pods/status","replicasets","replicationcontrollers","resourcequotas","scheduledjobs","serviceaccounts","services","statefulsets"],"verbs":["get","list","watch"]}]}
-  creationTimestamp: 2018-01-22T20:20:51Z
   name: pp:view
-  resourceVersion: "52274374"
-  selfLink: /apis/rbac.authorization.k8s.io/v1beta1/clusterroles/pp%3Aview
-  uid: bda3b3e6-ffb1-11e7-81f8-005056a811cf
 rules:
 - apiGroups:
   - ""

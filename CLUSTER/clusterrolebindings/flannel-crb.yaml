@@ -1,14 +1,7 @@
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRoleBinding
 metadata:
-  annotations:
-    kubectl.kubernetes.io/last-applied-configuration: |
-      {"apiVersion":"rbac.authorization.k8s.io/v1beta1","kind":"ClusterRoleBinding","metadata":{"annotations":{},"name":"flannel","namespace":""},"roleRef":{"apiGroup":"rbac.authorization.k8s.io","kind":"ClusterRole","name":"flannel"},"subjects":[{"kind":"ServiceAccount","name":"flannel","namespace":"kube-system"}]}
-  creationTimestamp: 2017-12-22T20:58:22Z
   name: flannel
-  resourceVersion: "48786891"
-  selfLink: /apis/rbac.authorization.k8s.io/v1beta1/clusterrolebindings/flannel
-  uid: d8a35489-e75a-11e7-98cd-005056a8c750
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole

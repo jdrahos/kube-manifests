@@ -1,14 +1,7 @@
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRole
 metadata:
-  annotations:
-    kubectl.kubernetes.io/last-applied-configuration: |
-      {"apiVersion":"rbac.authorization.k8s.io/v1beta1","kind":"ClusterRole","metadata":{"annotations":{},"name":"flannel","namespace":""},"rules":[{"apiGroups":[""],"resources":["pods"],"verbs":["get"]},{"apiGroups":[""],"resources":["nodes"],"verbs":["list","watch"]},{"apiGroups":[""],"resources":["nodes/status"],"verbs":["patch"]}]}
-  creationTimestamp: 2017-12-22T20:58:22Z
   name: flannel
-  resourceVersion: "48786890"
-  selfLink: /apis/rbac.authorization.k8s.io/v1beta1/clusterroles/flannel
-  uid: d88ad581-e75a-11e7-98cd-005056a8c750
 rules:
 - apiGroups:
   - ""

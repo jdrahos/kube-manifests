@@ -1,14 +1,7 @@
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRoleBinding
 metadata:
-  annotations:
-    kubectl.kubernetes.io/last-applied-configuration: |
-      {"apiVersion":"rbac.authorization.k8s.io/v1beta1","kind":"ClusterRoleBinding","metadata":{"annotations":{},"name":"tiller","namespace":""},"roleRef":{"apiGroup":"rbac.authorization.k8s.io","kind":"ClusterRole","name":"cluster-admin"},"subjects":[{"kind":"ServiceAccount","name":"tiller","namespace":"kube-system"}]}
-  creationTimestamp: 2017-12-22T21:06:14Z
   name: tiller
-  resourceVersion: "48786939"
-  selfLink: /apis/rbac.authorization.k8s.io/v1beta1/clusterrolebindings/tiller
-  uid: f2222534-e75b-11e7-98cd-005056a8c750
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole

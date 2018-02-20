@@ -1,11 +1,7 @@
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRole
 metadata:
-  creationTimestamp: 2018-01-23T16:11:59Z
   name: nginx-ingress-clusterrole
-  resourceVersion: "49012549"
-  selfLink: /apis/rbac.authorization.k8s.io/v1beta1/clusterroles/nginx-ingress-clusterrole
-  uid: 23fa7660-0058-11e8-81f8-005056a811cf
 rules:
 - apiGroups:
   - ""

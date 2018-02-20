@@ -1,11 +1,7 @@
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRoleBinding
 metadata:
-  creationTimestamp: 2017-12-22T20:20:09Z
   name: dex
-  resourceVersion: "35270606"
-  selfLink: /apis/rbac.authorization.k8s.io/v1beta1/clusterrolebindings/dex
-  uid: 81e79a6a-e755-11e7-98cd-005056a8c750
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole

@@ -3,13 +3,9 @@ kind: ClusterRole
 metadata:
   annotations:
     rbac.authorization.kubernetes.io/autoupdate: "true"
-  creationTimestamp: 2017-12-21T20:44:22Z
   labels:
     kubernetes.io/bootstrapping: rbac-defaults
   name: system:controller:generic-garbage-collector
-  resourceVersion: "35066572"
-  selfLink: /apis/rbac.authorization.k8s.io/v1beta1/clusterroles/system%3Acontroller%3Ageneric-garbage-collector
-  uid: b9a348f8-e68f-11e7-98cd-005056a8c750
 rules:
 - apiGroups:
   - '*'

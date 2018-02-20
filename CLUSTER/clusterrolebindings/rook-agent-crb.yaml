@@ -1,11 +1,7 @@
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRoleBinding
 metadata:
-  creationTimestamp: 2017-11-30T18:33:47Z
   name: rook-agent
-  resourceVersion: "41042287"
-  selfLink: /apis/rbac.authorization.k8s.io/v1beta1/clusterrolebindings/rook-agent
-  uid: 00a8cee3-d5fd-11e7-b55f-005056a811cf
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole

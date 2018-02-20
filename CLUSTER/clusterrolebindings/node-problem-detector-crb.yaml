@@ -1,17 +1,10 @@
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRoleBinding
 metadata:
-  annotations:
-    kubectl.kubernetes.io/last-applied-configuration: |
-      {"apiVersion":"rbac.authorization.k8s.io/v1beta1","kind":"ClusterRoleBinding","metadata":{"annotations":{},"labels":{"addonmanager.kubernetes.io/mode":"Reconcile","kubernetes.io/cluster-service":"true"},"name":"node-problem-detector","namespace":""},"roleRef":{"apiGroup":"rbac.authorization.k8s.io","kind":"ClusterRole","name":"system:node-problem-detector"},"subjects":[{"kind":"ServiceAccount","name":"node-problem-detector","namespace":"kube-system"}]}
-  creationTimestamp: 2018-01-05T20:27:11Z
   labels:
     addonmanager.kubernetes.io/mode: Reconcile
     kubernetes.io/cluster-service: "true"
   name: node-problem-detector
-  resourceVersion: "49014144"
-  selfLink: /apis/rbac.authorization.k8s.io/v1beta1/clusterrolebindings/node-problem-detector
-  uid: ceeb44ee-f256-11e7-9864-005056a8c750
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole

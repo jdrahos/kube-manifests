@@ -1,11 +1,7 @@
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRole
 metadata:
-  creationTimestamp: 2018-01-11T12:02:23Z
   name: view_nodes
-  resourceVersion: "48688180"
-  selfLink: /apis/rbac.authorization.k8s.io/v1beta1/clusterroles/view_nodes
-  uid: 48c8fefa-f6c7-11e7-9b5e-005056a811cf
 rules:
 - apiGroups:
   - ""

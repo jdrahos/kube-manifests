@@ -3,13 +3,9 @@ kind: ClusterRole
 metadata:
   annotations:
     rbac.authorization.kubernetes.io/autoupdate: "true"
-  creationTimestamp: 2017-12-21T20:44:22Z
   labels:
     kubernetes.io/bootstrapping: rbac-defaults
   name: system:controller:attachdetach-controller
-  resourceVersion: "35066566"
-  selfLink: /apis/rbac.authorization.k8s.io/v1beta1/clusterroles/system%3Acontroller%3Aattachdetach-controller
-  uid: b99fc2b2-e68f-11e7-98cd-005056a8c750
 rules:
 - apiGroups:
   - ""

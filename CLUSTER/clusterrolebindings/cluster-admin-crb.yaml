@@ -3,13 +3,9 @@ kind: ClusterRoleBinding
 metadata:
   annotations:
     rbac.authorization.kubernetes.io/autoupdate: "true"
-  creationTimestamp: 2017-12-21T20:44:22Z
   labels:
     kubernetes.io/bootstrapping: rbac-defaults
   name: cluster-admin
-  resourceVersion: "35066588"
-  selfLink: /apis/rbac.authorization.k8s.io/v1beta1/clusterrolebindings/cluster-admin
-  uid: b9ad26c8-e68f-11e7-98cd-005056a8c750
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole

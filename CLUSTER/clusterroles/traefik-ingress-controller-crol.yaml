@@ -1,11 +1,7 @@
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRole
 metadata:
-  creationTimestamp: 2018-01-23T16:24:59Z
   name: traefik-ingress-controller
-  resourceVersion: "49015384"
-  selfLink: /apis/rbac.authorization.k8s.io/v1beta1/clusterroles/traefik-ingress-controller
-  uid: f49ad950-0059-11e8-b499-005056a8c8f3
 rules:
 - apiGroups:
   - ""

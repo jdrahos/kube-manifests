@@ -1,0 +1,95 @@
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  annotations:
+    a10.service_group: kube-nginx-{{.Type}}
+  labels:
+    app: nginx-ingress
+    kubernetes.io/cluster-service: "true"
+  name: nginx-ingress-controller
+  namespace: ingress
+spec:
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: nginx-ingress-controller
+  template:
+    metadata:
+      labels:
+        app: nginx-ingress-controller
+    spec:
+      containers:
+      - args:
+        - /nginx-ingress-controller
+        - --default-backend-service=$(POD_NAMESPACE)/nginx-ingress-default-backend
+        - --configmap=$(POD_NAMESPACE)/nginx-ingress-controller
+        - --http-port=90
+        - --status-port=18090
+        - --https-port=9443
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.name
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
+        image: quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.9.0
+        imagePullPolicy: Always
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /healthz
+            port: 10254
+            scheme: HTTP
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        name: nginx-ingress-controller
+        ports:
+        - containerPort: 90
+          hostPort: 90
+          name: nginx-http
+          protocol: TCP
+        - containerPort: 18090
+          hostPort: 18090
+          name: nginx-ui
+          protocol: TCP
+        - containerPort: 10254
+          hostPort: 10254
+          name: nginx-health
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /healthz
+            port: 10254
+            scheme: HTTP
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        resources:
+          requests:
+            cpu: 200m
+            memory: 250Mi
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      hostNetwork: true
+      nodeSelector:
+        role: edge-router
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      serviceAccount: nginx-ingress-serviceaccount
+      serviceAccountName: nginx-ingress-serviceaccount
+      terminationGracePeriodSeconds: 60
+  templateGeneration: 17
+  updateStrategy:
+    rollingUpdate:
+      maxUnavailable: 1
+    type: RollingUpdate

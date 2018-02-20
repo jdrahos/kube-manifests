@@ -1,0 +1,37 @@
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRole
+metadata:
+  name: pp:view
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - nodes
+  - bindings
+  - configmaps
+  - cronjobs
+  - daemonsets
+  - deployments
+  - deployments
+  - endpoints
+  - events
+  - horizontalpodautoscalers
+  - ingresses
+  - jobs
+  - limitranges
+  - namespaces
+  - persistentvolumeclaims
+  - pods
+  - pods/log
+  - pods/status
+  - replicasets
+  - replicationcontrollers
+  - resourcequotas
+  - scheduledjobs
+  - serviceaccounts
+  - services
+  - statefulsets
+  verbs:
+  - get
+  - list
+  - watch

@@ -1,0 +1,9 @@
+apiVersion: v1
+data:
+  configEnvironment: Stage
+  env: stage
+  log4jCustomConfig: -kubeStage
+kind: ConfigMap
+metadata:
+  name: env-configs
+  naemspace: staging

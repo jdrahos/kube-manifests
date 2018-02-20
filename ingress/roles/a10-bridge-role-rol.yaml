@@ -1,0 +1,15 @@
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: Role
+metadata:
+  name: a10-bridge-role
+  namespace: ingress
+rules:
+- apiGroups:
+  - ""
+  - extensions
+  resources:
+  - daemonsets
+  - configmaps
+  - nodes
+  verbs:
+  - list

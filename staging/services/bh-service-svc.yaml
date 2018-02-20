@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    prometheus.io/path: /bh/metrics
+    prometheus.io/port: "8080"
+    prometheus.io/scrape: "true"
+    traefik.backend.circuitbreaker: NetworkErrorRatio() > 0.9
+    traefik.backend.loadbalancer.stickiness: "true"
+  labels:
+    name: bh-service
+  name: bh-service
+  naemspace: staging
+spec:
+  clusterIP: <unknown>
+  ports:
+  - name: http
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  - name: jmx
+    port: 8686
+    protocol: TCP
+    targetPort: 8686
+  selector:
+    app: bh-app
+  sessionAffinity: ClientIP
+  type: ClusterIP

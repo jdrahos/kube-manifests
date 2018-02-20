@@ -1,0 +1,17 @@
+apiVersion: v1
+data:
+  config.yaml: |-
+    instances:
+      - name: "lga-lb01"
+        apiUrl: "https://lga-lb01"
+        apiVersion: 2
+        userName: "axapi"
+      - name: "lga-lb"
+        apiUrl: "https://lga-lb"
+        apiVersion: 3
+        userName: "axapi"
+  interval: "120"
+kind: ConfigMap
+metadata:
+  name: a10-config
+  namespace: ingress

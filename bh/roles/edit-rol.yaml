@@ -1,0 +1,33 @@
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: Role
+metadata:
+  name: edit
+  namespace: bh
+rules:
+- apiGroups:
+  - '*'
+  resources:
+  - bindings
+  - configmaps
+  - cronjobs
+  - daemonsets
+  - deployments
+  - deployments
+  - endpoints
+  - events
+  - horizontalpodautoscalers
+  - ingresses
+  - jobs
+  - limitranges
+  - namespaces
+  - persistentvolumeclaims
+  - pods
+  - replicasets
+  - replicationcontrollers
+  - resourcequotas
+  - scheduledjobs
+  - serviceaccounts
+  - services
+  - statefulsets
+  verbs:
+  - '*'

@@ -1,0 +1,196 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+  labels:
+    app: bh-app
+  name: bh-deployment
+  namespace: qa
+spec:
+  minReadySeconds: 5
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 20
+  selector:
+    matchLabels:
+      app: bh-app
+  strategy:
+    rollingUpdate:
+      maxSurge: 10
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        pod.alpha.kubernetes.io/init-containers: '[{"name":"chmod-kmp-dir","image":"busybox","command":["sh","-c","chown
+          -R 100:101 /var/log/pulsepoint/wide"],"resources":{},"volumeMounts":[{"name":"kafka-logs","mountPath":"/var/log/pulsepoint/wide"}],"terminationMessagePath":"/dev/termination-log","terminationMessagePolicy":"File","imagePullPolicy":"Always","securityContext":{"runAsUser":0}}]'
+        pod.beta.kubernetes.io/init-containers: '[{"name":"chmod-kmp-dir","image":"busybox","command":["sh","-c","chown
+          -R 100:101 /var/log/pulsepoint/wide"],"resources":{},"volumeMounts":[{"name":"kafka-logs","mountPath":"/var/log/pulsepoint/wide"}],"terminationMessagePath":"/dev/termination-log","terminationMessagePolicy":"File","imagePullPolicy":"Always","securityContext":{"runAsUser":0}}]'
+      labels:
+        app: bh-app
+    spec:
+      containers:
+      - env:
+        - name: KUB_NAMESPACE
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
+        - name: KUB_NODE
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: spec.nodeName
+        - name: CLUSTER_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: name
+              name: cluster-configs
+        - name: CONFIG_ENV
+          valueFrom:
+            configMapKeyRef:
+              key: env
+              name: env-configs
+        - name: CONFIG_DC
+          valueFrom:
+            configMapKeyRef:
+              key: dc
+              name: cluster-configs
+        image: registry.pulsepoint.com/logging-fluentd:0.14
+        imagePullPolicy: Always
+        name: fluentd
+        ports:
+        - containerPort: 5170
+          name: fluentd
+          protocol: TCP
+        resources:
+          requests:
+            cpu: 100m
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /fluentd/etc/fluent.conf
+          name: bh-configs
+          subPath: fluentd.options
+        - mountPath: /var/log/jetty
+          name: jetty-logs
+      - env:
+        - name: DC
+          valueFrom:
+            configMapKeyRef:
+              key: dc
+              name: cluster-configs
+        - name: ENV
+          valueFrom:
+            configMapKeyRef:
+              key: env
+              name: env-configs
+        - name: JAVA_OPTIONS
+          valueFrom:
+            configMapKeyRef:
+              key: java.options
+              name: bh-configs
+        - name: CONFIG_LINK
+          valueFrom:
+            configMapKeyRef:
+              key: configPrefix
+              name: cluster-configs
+        - name: CONFIG_ENV
+          valueFrom:
+            configMapKeyRef:
+              key: configEnvironment
+              name: env-configs
+        - name: CW_LOG4J_CUSTOM_CONFIG
+          valueFrom:
+            configMapKeyRef:
+              key: log4jCustomConfig
+              name: env-configs
+        image: registry.pulsepoint.com/bh:1.0.16
+        imagePullPolicy: Always
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /dataservice/overall
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 300
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 10
+        name: jetty
+        ports:
+        - containerPort: 8080
+          name: bh-http
+          protocol: TCP
+        - containerPort: 8680
+          name: bh-jmx
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /dataservice/overall
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 90
+          periodSeconds: 30
+          successThreshold: 1
+          timeoutSeconds: 120
+        resources:
+          limits:
+            cpu: "7"
+            memory: 8Gi
+          requests:
+            cpu: "6"
+            memory: 6Gi
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /var/lib/jetty/start.ini
+          name: bh-configs
+          subPath: start.ini
+        - mountPath: /var/lib/jetty/resources/log4j2.xml
+          name: bh-configs
+          subPath: jetty-log4j2.xml
+        - mountPath: /etc/jmxExporter/config.yaml
+          name: bh-configs
+          subPath: prometheus.config.yaml
+        - mountPath: /usr/local/bin/preJetty.sh
+          name: bh-configs
+          subPath: preJetty.sh
+        - mountPath: /var/log/pulsepoint/wide
+          name: kafka-logs
+        - mountPath: /var/log/jetty
+          name: jetty-logs
+      dnsPolicy: ClusterFirst
+      initContainers:
+      - command:
+        - sh
+        - -c
+        - chown -R 100:101 /var/log/pulsepoint/wide
+        image: busybox
+        imagePullPolicy: Always
+        name: chmod-kmp-dir
+        resources: {}
+        securityContext:
+          runAsUser: 0
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /var/log/pulsepoint/wide
+          name: kafka-logs
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext:
+        fsGroup: 101
+        runAsUser: 100
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - configMap:
+          defaultMode: 420
+          name: bh-configs
+        name: bh-configs
+      - hostPath:
+          path: /var/log/pulsepoint/wide
+        name: kafka-logs
+      - emptyDir: {}
+        name: jetty-logs

@@ -1,0 +1,10 @@
+apiVersion: v1
+data:
+  configEnvironemnt: Stage
+  configEnvironment: Stage
+  env: stage
+  log4jCustomConfig: -kubeStage
+kind: ConfigMap
+metadata:
+  name: env-configs
+  namespace: qa

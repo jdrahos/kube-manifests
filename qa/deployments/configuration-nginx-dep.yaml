@@ -1,0 +1,41 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: configuration-nginx
+    run: configuration-nginx
+  name: configuration-nginx
+  namespace: qa
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: configuration-nginx
+      run: configuration-nginx
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: configuration-nginx
+        run: configuration-nginx
+    spec:
+      containers:
+      - image: registry.pulsepoint.com/exchange-configuration-nginx:latest
+        imagePullPolicy: Always
+        name: nginx
+        ports:
+        - containerPort: 80
+          name: http
+          protocol: TCP
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30

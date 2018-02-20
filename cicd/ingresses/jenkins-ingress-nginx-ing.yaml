@@ -1,0 +1,26 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+  name: jenkins-ingress-nginx
+  namspace: cicd
+spec:
+  backend:
+    serviceName: default-http-backend
+    servicePort: 80
+  rules:
+  - host: lga-kube-jenkins
+    http:
+      paths:
+      - backend:
+          serviceName: jenkins-jenkins
+          servicePort: 8080
+        path: /
+  - host: lga-kube-jenkins.pulsepoint.com
+    http:
+      paths:
+      - backend:
+          serviceName: jenkins-jenkins
+          servicePort: 8080
+        path: /

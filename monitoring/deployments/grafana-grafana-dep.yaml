@@ -1,0 +1,91 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: grafana-grafana
+    chart: grafana-0.4.4
+    component: grafana
+    heritage: Tiller
+    release: grafana
+  name: grafana-grafana
+  namespace: monitoring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grafana-grafana
+      component: grafana
+      release: grafana
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        checksum/config: 675fc08bc7b9a622e8043b77351d9e6da6f42db06782c77cb397511cabec3494
+        checksum/dashboards-config: 096130745bea105c3970da4730b06ab797696d04d26d75e64798f2cf8670a4c4
+      labels:
+        app: grafana-grafana
+        component: grafana
+        release: grafana
+    spec:
+      containers:
+      - env:
+        - name: GF_SECURITY_ADMIN_USER
+          valueFrom:
+            secretKeyRef:
+              key: grafana-admin-user
+              name: grafana-grafana
+        - name: GF_SECURITY_ADMIN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: grafana-admin-password
+              name: grafana-grafana
+        image: grafana/grafana:4.4.3
+        imagePullPolicy: Always
+        name: grafana
+        ports:
+        - containerPort: 3000
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /login
+            port: 3000
+            scheme: HTTP
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 30
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /etc/grafana
+          name: config-volume
+        - mountPath: /var/lib/grafana/dashboards
+          name: dashboard-volume
+        - mountPath: /var/lib/grafana/data
+          name: storage-volume
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 300
+      volumes:
+      - configMap:
+          defaultMode: 420
+          name: grafana-grafana-config
+        name: config-volume
+      - configMap:
+          defaultMode: 420
+          name: grafana-grafana-dashs
+        name: dashboard-volume
+      - name: storage-volume
+        persistentVolumeClaim:
+          claimName: grafana

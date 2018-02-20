@@ -444,4 +444,4 @@ data:
 kind: ConfigMap
 metadata:
   name: bh-configs
-  namspace: bh
+  namespace: bh

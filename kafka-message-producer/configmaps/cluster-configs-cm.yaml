@@ -8,4 +8,4 @@ data:
 kind: ConfigMap
 metadata:
   name: cluster-configs
-  namspace: kafka-message-producer
+  namespace: kafka-message-producer

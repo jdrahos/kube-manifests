@@ -6,7 +6,7 @@ metadata:
     chart: jenkins-0.13.0
     component: jenkins-jenkins-master
   name: jenkins-jenkins-agent
-  namspace: cicd
+  namespace: cicd
 spec:
   clusterIP: <unknown>
   ports:

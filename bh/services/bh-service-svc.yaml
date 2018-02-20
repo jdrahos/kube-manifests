@@ -10,7 +10,7 @@ metadata:
   labels:
     name: bh-service
   name: bh-service
-  namspace: bh
+  namespace: bh
 spec:
   clusterIP: <unknown>
   ports:

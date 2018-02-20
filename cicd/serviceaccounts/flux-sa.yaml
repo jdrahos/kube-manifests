@@ -4,4 +4,4 @@ metadata:
   labels:
     name: flux
   name: flux
-  namspace: cicd
+  namespace: cicd

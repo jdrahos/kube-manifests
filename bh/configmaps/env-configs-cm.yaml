@@ -6,4 +6,4 @@ data:
 kind: ConfigMap
 metadata:
   name: env-configs
-  namspace: bh
+  namespace: bh

@@ -8,4 +8,4 @@ data:
 kind: ConfigMap
 metadata:
   name: cluster-configs
-  namspace: bh
+  namespace: bh

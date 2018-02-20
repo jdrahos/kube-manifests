@@ -5,7 +5,7 @@ metadata:
   labels:
     app: kafka-message-producer-app
   name: kafka-message-producer-ds
-  namspace: kafka-message-producer
+  namespace: kafka-message-producer
 spec:
   revisionHistoryLimit: 10
   selector:

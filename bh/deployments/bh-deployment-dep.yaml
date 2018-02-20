@@ -4,7 +4,7 @@ metadata:
   labels:
     app: bh-app
   name: bh-deployment
-  namspace: bh
+  namespace: bh
 spec:
   minReadySeconds: 5
   progressDeadlineSeconds: 600

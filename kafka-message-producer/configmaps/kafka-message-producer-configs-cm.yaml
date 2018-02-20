@@ -61,4 +61,4 @@ data:
 kind: ConfigMap
 metadata:
   name: kafka-message-producer-configs
-  namspace: kafka-message-producer
+  namespace: kafka-message-producer

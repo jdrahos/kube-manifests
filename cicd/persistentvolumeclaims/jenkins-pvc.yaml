@@ -2,7 +2,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: jenkins
-  namspace: cicd
+  namespace: cicd
 spec:
   accessModes:
   - ReadWriteOnce

@@ -8,7 +8,7 @@ metadata:
     heritage: Tiller
     release: jenkins
   name: jenkins-jenkins
-  namspace: cicd
+  namespace: cicd
 spec:
   clusterIP: <unknown>
   ports:

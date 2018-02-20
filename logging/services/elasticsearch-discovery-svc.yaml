@@ -3,7 +3,6 @@ kind: Service
 metadata:
   name: elasticsearch-discovery
 spec:
-  clusterIP: <unknown>
   ports:
   - name: transport
     port: 9300

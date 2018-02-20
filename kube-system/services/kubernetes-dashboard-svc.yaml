@@ -7,7 +7,6 @@ metadata:
   name: kubernetes-dashboard
   namespace: kube-system
 spec:
-  clusterIP: <unknown>
   ports:
   - port: 80
     protocol: TCP

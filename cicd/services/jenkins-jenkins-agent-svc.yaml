@@ -8,7 +8,6 @@ metadata:
   name: jenkins-jenkins-agent
   namespace: cicd
 spec:
-  clusterIP: <unknown>
   ports:
   - name: slavelistener
     port: 50000

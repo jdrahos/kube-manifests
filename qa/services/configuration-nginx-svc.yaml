@@ -4,7 +4,6 @@ metadata:
   name: configuration-nginx
   namespace: qa
 spec:
-  clusterIP: <unknown>
   ports:
   - name: http
     port: 80

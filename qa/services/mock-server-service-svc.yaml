@@ -6,7 +6,6 @@ metadata:
   name: mock-server-service
   namespace: qa
 spec:
-  clusterIP: <unknown>
   ports:
   - name: http
     port: 8080

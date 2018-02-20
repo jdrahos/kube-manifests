@@ -12,7 +12,6 @@ metadata:
   name: bh-service
   naemspace: staging
 spec:
-  clusterIP: <unknown>
   ports:
   - name: http
     port: 8080

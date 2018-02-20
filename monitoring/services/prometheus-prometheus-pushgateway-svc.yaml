@@ -12,7 +12,6 @@ metadata:
   name: prometheus-prometheus-pushgateway
   namespace: monitoring
 spec:
-  clusterIP: <unknown>
   ports:
   - name: http
     port: 9091

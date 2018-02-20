@@ -7,7 +7,6 @@ metadata:
   name: tiller-deploy
   namespace: kube-system
 spec:
-  clusterIP: <unknown>
   ports:
   - name: tiller
     port: 44134

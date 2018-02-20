@@ -4,7 +4,6 @@ metadata:
   name: flux
   namespace: cicd
 spec:
-  clusterIP: <unknown>
   externalTrafficPolicy: Cluster
   ports:
   - port: 80

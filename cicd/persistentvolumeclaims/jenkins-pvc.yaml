@@ -10,4 +10,3 @@ spec:
     requests:
       storage: 8Gi
   storageClassName: rook-block
-  volumeName: pvc-93b0c218-0ae7-11e8-9c01-005056a8c750

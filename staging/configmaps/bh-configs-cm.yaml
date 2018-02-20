@@ -445,5 +445,5 @@ data:
 kind: ConfigMap
 metadata:
   name: bh-configs
-  naemspace: staging
+  namespace: staging
 

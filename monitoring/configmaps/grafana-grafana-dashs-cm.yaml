@@ -7688,6 +7688,5 @@ data:
     }
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
   name: grafana-grafana-dashs
-  selfLink: /api/v1/namespaces/monitoring/configmaps/grafana-grafana-dashs
+  namespace: monitoring

@@ -1,7 +1,6 @@
 apiVersion: v1
 kind: Service
 metadata:
-  creationTimestamp: null
   labels:
     app: grafana-grafana
     chart: grafana-0.4.4
@@ -9,7 +8,7 @@ metadata:
     heritage: Tiller
     release: grafana
   name: grafana-grafana
-  selfLink: /api/v1/namespaces/monitoring/services/grafana-grafana
+  namespace: monitoring
 spec:
   clusterIP: <unknown>
   ports:
@@ -22,5 +21,3 @@ spec:
     component: grafana
   sessionAffinity: None
   type: ClusterIP
-status:
-  loadBalancer: {}

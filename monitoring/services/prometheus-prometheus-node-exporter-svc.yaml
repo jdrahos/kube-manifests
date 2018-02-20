@@ -3,7 +3,6 @@ kind: Service
 metadata:
   annotations:
     prometheus.io/scrape: "true"
-  creationTimestamp: null
   labels:
     app: prometheus
     chart: prometheus-4.5.0
@@ -11,7 +10,7 @@ metadata:
     heritage: Tiller
     release: prometheus
   name: prometheus-prometheus-node-exporter
-  selfLink: /api/v1/namespaces/monitoring/services/prometheus-prometheus-node-exporter
+  namespace: monitoring
 spec:
   clusterIP: None
   ports:

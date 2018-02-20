@@ -139,11 +139,10 @@ data:
       run-interval = "1s"
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
   labels:
     app: heapster-store-influxdb
     chart: influxdb-0.4.2
     heritage: Tiller
     release: heapster-store
   name: heapster-store-influxdb
-  selfLink: /api/v1/namespaces/monitoring/configmaps/heapster-store-influxdb
+  namespace: monitoring

@@ -3,7 +3,6 @@ kind: Service
 metadata:
   annotations:
     prometheus.io/probe: pushgateway
-  creationTimestamp: null
   labels:
     app: prometheus
     chart: prometheus-4.5.0
@@ -11,7 +10,7 @@ metadata:
     heritage: Tiller
     release: prometheus
   name: prometheus-prometheus-pushgateway
-  selfLink: /api/v1/namespaces/monitoring/services/prometheus-prometheus-pushgateway
+  namespace: monitoring
 spec:
   clusterIP: <unknown>
   ports:
@@ -25,5 +24,3 @@ spec:
     release: prometheus
   sessionAffinity: None
   type: ClusterIP
-status:
-  loadBalancer: {}

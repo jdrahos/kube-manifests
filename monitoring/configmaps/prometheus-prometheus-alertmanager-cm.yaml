@@ -10,6 +10,5 @@ data:
     false\n        send_resolved: true"
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
   name: prometheus-prometheus-alertmanager
-  selfLink: /api/v1/namespaces/monitoring/configmaps/prometheus-prometheus-alertmanager
+  namespace: monitoring

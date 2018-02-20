@@ -167,6 +167,5 @@ data:
   rules: ""
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
   name: prometheus-prometheus-server
-  selfLink: /api/v1/namespaces/monitoring/configmaps/prometheus-prometheus-server
+  namespace: monitoring

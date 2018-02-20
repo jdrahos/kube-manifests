@@ -199,6 +199,6 @@ data:
     org_role = "Editor"
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
   name: grafana-grafana-config
-  selfLink: /api/v1/namespaces/monitoring/configmaps/grafana-grafana-config
+  namespace: monitoring
+

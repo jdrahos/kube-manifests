@@ -5,6 +5,7 @@ metadata:
   labels:
     app: a10bridge-app
   name: a10bridge-deployment
+  namespace: ingress
 spec:
   minReadySeconds: 5
   progressDeadlineSeconds: 600

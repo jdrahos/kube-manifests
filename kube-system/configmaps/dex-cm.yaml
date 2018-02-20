@@ -59,6 +59,6 @@ data:
       localRootCA: ${HOME}/.kube/lga-test/ca.cert
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
   name: dex
-  selfLink: /api/v1/namespaces/kube-system/configmaps/dex
+  namespace: kube-system
+

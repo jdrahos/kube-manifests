@@ -17,9 +17,8 @@ data:
     }
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
   labels:
     app: flannel
     tier: node
   name: kube-flannel-cfg
-  selfLink: /api/v1/namespaces/kube-system/configmaps/kube-flannel-cfg
+  namespace: kube-system

@@ -21,6 +21,5 @@ data:
     -----END CERTIFICATE-----
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
   name: extension-apiserver-authentication
-  selfLink: /api/v1/namespaces/kube-system/configmaps/extension-apiserver-authentication
+  namespace: kube-system

@@ -1,16 +1,12 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  annotations:
-    deployment.kubernetes.io/revision: "2"
-  creationTimestamp: null
-  generation: 1
   labels:
     addonmanager.kubernetes.io/mode: Reconcile
     k8s-app: kube-dns
     kubernetes.io/cluster-service: "true"
   name: kube-dns
-  selfLink: /apis/extensions/v1beta1/namespaces/kube-system/deployments/kube-dns
+  namespace: kube-system
 spec:
   progressDeadlineSeconds: 600
   replicas: 1
@@ -130,4 +126,3 @@ spec:
           name: kube-dns
           optional: true
         name: kube-dns-config
-status: {}

@@ -5,7 +5,7 @@ metadata:
   labels:
     app: bh-app
   name: bh-deployment
-  naemspace: staging
+  namespace: staging
 spec:
   minReadySeconds: 5
   progressDeadlineSeconds: 600

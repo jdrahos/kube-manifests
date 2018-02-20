@@ -10,7 +10,7 @@ metadata:
   labels:
     name: bh-service
   name: bh-service
-  naemspace: staging
+  namespace: staging
 spec:
   ports:
   - name: http

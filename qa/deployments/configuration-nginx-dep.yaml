@@ -1,15 +1,11 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  annotations:
-    deployment.kubernetes.io/revision: "1"
-  creationTimestamp: null
-  generation: 1
   labels:
     app: configuration-nginx
     run: configuration-nginx
   name: configuration-nginx
-  selfLink: /apis/extensions/v1beta1/namespaces/qa/deployments/configuration-nginx
+  namespace: qa
 spec:
   replicas: 1
   selector:
@@ -44,4 +40,3 @@ spec:
       schedulerName: default-scheduler
       securityContext: {}
       terminationGracePeriodSeconds: 30
-status: {}

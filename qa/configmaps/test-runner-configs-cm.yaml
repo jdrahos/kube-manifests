@@ -171,6 +171,5 @@ data:
     # is required to put JSTL on the container classpath
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
   name: test-runner-configs
-  selfLink: /api/v1/namespaces/qa/configmaps/test-runner-configs
+  namespace: qa

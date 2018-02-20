@@ -170,6 +170,5 @@ data:
     # is required to put JSTL on the container classpath
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
   name: mock-server-configs
-  selfLink: /api/v1/namespaces/qa/configmaps/mock-server-configs
+  namespace: qa

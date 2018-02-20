@@ -6,6 +6,5 @@ data:
   log4jCustomConfig: -kubeStage
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
   name: env-configs
-  selfLink: /api/v1/namespaces/qa/configmaps/env-configs
+  namespace: qa
